@@ -3,6 +3,7 @@ package efub.toy2.papers.domain.member.domain;
 import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,13 +22,25 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     @Column(nullable = false)
-    private String ninkname;
+    private String nickname;
 
     @Column
     private String introduce;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private Role role;
+
     @OneToOne
     @JoinColumn(name = "default_folder_id")
     private Folder defaultFolder;
+
+    @Builder
+    public Member(String email, String nickname , String introduce, Folder defaultFolder){
+        this.email = email;
+        this.nickname = nickname;
+        this.introduce = introduce;
+        this.defaultFolder = defaultFolder;
+    }
 
 }
