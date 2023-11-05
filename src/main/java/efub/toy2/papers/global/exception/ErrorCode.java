@@ -18,7 +18,9 @@ public enum ErrorCode {
 
     NO_SCRAP_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 스크랩입니다."),
 
-    NO_COMMENT_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 댓글입니다.")
+    NO_COMMENT_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 댓글입니다."),
+
+    NO_REPLY_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 대댓글입니다.")
     ;
 
 
