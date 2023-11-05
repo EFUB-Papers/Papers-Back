@@ -3,6 +3,7 @@ package efub.toy2.papers.domain.folder.domain;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class Folder extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_owner_id")
     private Member folderOwner;
+
+    @Builder
+    public Folder(String folderName, Member folderOwner){
+        this.folderName =folderName;
+        this.folderOwner=folderOwner;
+    }
 }
