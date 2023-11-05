@@ -28,7 +28,7 @@ public class Scrap extends BaseTimeEntity {
     @Column(nullable = false)
     private String link;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scrap_writer_id")
     private Member scrapWriter;
 

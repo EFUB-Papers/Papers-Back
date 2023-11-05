@@ -22,7 +22,7 @@ public class Folder extends BaseTimeEntity {
     private String folderName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_owner_id")
+    @JoinColumn(name = "folder_owner_id", updatable = false)
     private Member folderOwner;
 
     @Builder
