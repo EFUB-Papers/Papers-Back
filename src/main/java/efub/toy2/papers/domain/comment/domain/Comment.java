@@ -4,6 +4,7 @@ import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,5 +28,12 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_writer_id")
-    private Member CommentWriter;
+    private Member commentWriter;
+
+    @Builder
+    public Comment(String commentContent , Scrap scrap , Member commentWriter){
+        this.commentContent =commentContent;
+        this.scrap =scrap;
+        this.commentWriter = commentWriter;
+    }
 }

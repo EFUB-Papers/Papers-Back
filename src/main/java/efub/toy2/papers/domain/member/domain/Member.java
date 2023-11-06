@@ -16,7 +16,8 @@ public class Member extends BaseTimeEntity {
     @Column
     private Long memberId;
 
-    @Column(nullable = false)
+    @Column
+    //(nullable = false)
     private String email;
 
     @Column(nullable = false)

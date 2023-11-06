@@ -8,12 +8,10 @@ import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
 import efub.toy2.papers.domain.member.dto.response.ReissueResponseDto;
 import efub.toy2.papers.domain.member.service.AuthService;
 import efub.toy2.papers.domain.member.service.MemberService;
+import efub.toy2.papers.global.config.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -50,6 +48,12 @@ public class MemberController {
     @PostMapping("/members/search")
     public MemberInfoDto memberFindByNickname(@RequestBody NicknameRequestDto requestDto){
         return new MemberInfoDto(memberService.findMemberByNickname(requestDto.getNickname()));
+    }
+
+    /* 이건 이후 지우기 */
+    @GetMapping("/members/test")
+    public MemberInfoDto memberTest(@AuthUser Member member){
+        return new MemberInfoDto(member);
     }
 
 }
