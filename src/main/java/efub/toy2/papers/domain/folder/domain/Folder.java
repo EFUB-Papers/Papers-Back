@@ -30,4 +30,9 @@ public class Folder extends BaseTimeEntity {
         this.folderName =folderName;
         this.folderOwner=folderOwner;
     }
+
+    /* 폴더 이름 변경 */
+    public void updateFolderName(String folderName){
+        this.folderName = folderName;
+    }
 }
