@@ -1,6 +1,7 @@
 package efub.toy2.papers.domain.member.service;
 
 import efub.toy2.papers.domain.folder.domain.Folder;
+import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final FolderRepository folderRepository;
     public final FolderService folderService;
     public final S3Service s3Service;
 
@@ -71,5 +74,15 @@ public class MemberService {
         List<String> imgPaths = s3Service.upload(images);
         member.updateMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
         return new MemberInfoDto(member);
+    }
+
+    /* 회원 별 폴더 목록 조회 */
+    public List<FolderResponseDto> findFolderListByMember(Member member) {
+        List<Folder> folderList = folderService.findFolderListByOwner(member);
+        List<FolderResponseDto> responseDtoList = new ArrayList<>();
+        for(Folder folder : folderList){
+            responseDtoList.add(new FolderResponseDto(folder));
+        }
+        return responseDtoList;
     }
 }

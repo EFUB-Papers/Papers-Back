@@ -1,5 +1,6 @@
 package efub.toy2.papers.domain.member.controller;
 
+import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.request.LoginRequestDto;
@@ -60,6 +61,13 @@ public class MemberController {
                                        @RequestPart(value="profileImg" ,required = false) List<MultipartFile> images) throws IOException{
         return memberService.updateProfile(member,requestDto,images);
     }
+
+    /* 회원 별 폴더 조회 */
+    @GetMapping("/members/folders")
+    public List<FolderResponseDto> getMemberFolderList(@AuthUser Member member){
+        return memberService.findFolderListByMember(member);
+    }
+
 
 
 
