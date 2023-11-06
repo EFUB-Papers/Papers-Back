@@ -4,15 +4,21 @@ import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
+import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
 import efub.toy2.papers.domain.member.oauth.GoogleUser;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
+import efub.toy2.papers.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MemberService {
     private final MemberRepository memberRepository;
     public final FolderService folderService;
+    public final S3Service s3Service;
 
     public Member saveMember(@RequestBody  GoogleUser googleUser) {
         Member member = Member.builder()
@@ -57,5 +64,12 @@ public class MemberService {
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_MEMBER_EXIST));
+    }
+
+    /* 멤버 프로필 설정 */
+    public MemberInfoDto updateProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) {
+        List<String> imgPaths = s3Service.upload(images);
+        member.updateMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
+        return new MemberInfoDto(member);
     }
 }

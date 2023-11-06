@@ -1,6 +1,7 @@
 package efub.toy2.papers.domain.member.controller;
 
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.request.LoginRequestDto;
 import efub.toy2.papers.domain.member.dto.request.NicknameRequestDto;
 import efub.toy2.papers.domain.member.dto.response.LoginResponseDto;
@@ -12,9 +13,11 @@ import efub.toy2.papers.global.config.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -49,6 +52,19 @@ public class MemberController {
     public MemberInfoDto memberFindByNickname(@RequestBody NicknameRequestDto requestDto){
         return new MemberInfoDto(memberService.findMemberByNickname(requestDto.getNickname()));
     }
+
+    /* 프로필 설정 */
+    @PostMapping("/members/profile")
+    public MemberInfoDto updateProfile(@AuthUser Member member,
+                                       @RequestPart(value="dto") ProfileRequestDto requestDto ,
+                                       @RequestPart(value="profileImg" ,required = false) List<MultipartFile> images) throws IOException{
+        return memberService.updateProfile(member,requestDto,images);
+    }
+
+
+
+
+
 
     /* 이건 이후 지우기 */
     @GetMapping("/members/test")

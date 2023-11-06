@@ -16,8 +16,7 @@ public class Member extends BaseTimeEntity {
     @Column
     private Long memberId;
 
-    @Column
-    //(nullable = false)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -25,6 +24,9 @@ public class Member extends BaseTimeEntity {
 
     @Column
     private String introduce;
+
+    @Column
+    private String profileImgUrl;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -40,6 +42,12 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
         this.introduce = introduce;
         this.defaultFolder = defaultFolder;
+    }
+
+    public void updateMemberInfo(String nickname , String introduce , String profileImgUrl){
+        this.nickname = nickname;
+        this.introduce = introduce;
+        this.profileImgUrl = profileImgUrl;
     }
 
 }
