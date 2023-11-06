@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping
@@ -29,4 +31,9 @@ public class CommentController {
         return commentService.deleteComment(member,commentId);
     }
 
+    /* 스크랩의 댓글 목록 조회 */
+    @GetMapping("/scraps/{scrapId}/comments")
+    public List<CommentResponseDto> getScrapCommentList(@AuthUser Member member , @PathVariable Long scrapId){
+        return commentService.findCommentListByScrapId(member,scrapId);
+    }
 }

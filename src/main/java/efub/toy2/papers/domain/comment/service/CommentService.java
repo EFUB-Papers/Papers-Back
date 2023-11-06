@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -48,10 +51,23 @@ public class CommentService {
         return "댓글이 삭제되었습니다.";
     }
 
+    /* 스크랩의 댓글 목록 조회 */
+    public List<CommentResponseDto> findCommentListByScrapId(Member member, Long scrapId) {
+        Scrap scrap = scrapRepository.findById(scrapId)
+                .orElseThrow(()->new CustomException(ErrorCode.NO_SCRAP_EXIST));
+        List<Comment> commentList = commentRepository.findAllByScrapOrderByCreatedAt(scrap);
+        List<CommentResponseDto> commentResponseDtoList =new ArrayList<>();
+        for(Comment comment : commentList){
+            Boolean isMine = commentIsMine(member,comment);
+            commentResponseDtoList.add(new CommentResponseDto(comment , isMine));
+        }
+        return commentResponseDtoList;
+    }
+
     /* 댓글 작성자 확인 */
-    public Boolean commentIsMine(Member member , Comment comment){
+    public Boolean commentIsMine(Member member , Comment comment) {
         Boolean isMine;
-        if(comment.getCommentWriter().getMemberId() == member.getMemberId()) isMine= true;
+        if (comment.getCommentWriter().getMemberId() == member.getMemberId()) isMine = true;
         else isMine = false;
         return isMine;
     }
