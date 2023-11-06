@@ -27,10 +27,10 @@ public enum ErrorCode {
 
     /* folder */
     NO_FOLDER_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 폴더입니다."),
-    DEFAUT_FOLDER_CANNOT_DELETE(HttpStatus.BAD_REQUEST,"기본 폴더는 삭제할 수 없습니다.")
-    ;
-
-
+    DEFAUT_FOLDER_CANNOT_DELETE(HttpStatus.BAD_REQUEST,"기본 폴더는 삭제할 수 없습니다."),
+    FILE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST,"파일 업로드에 실패하였습니다." ),
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST,"파일 삭제에 실패하였습니다." ),
+    FILE_CONVERT_ERROR(HttpStatus.BAD_REQUEST,"파일 변한에 실패하였습니다." );
 
 
     private final HttpStatus status;
