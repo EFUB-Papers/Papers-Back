@@ -19,7 +19,7 @@ public class ReplyController {
     /* 대댓글 생성 */
     @PostMapping
     public ReplyResponseDto createReply(@AuthUser Member member, @RequestBody ReplyRequestDto requestDto){
-        return new ReplyResponseDto(replyService.createReply(member,requestDto));
+        return replyService.createReply(member,requestDto);
     }
 
     /* 대댓글 삭제 */
