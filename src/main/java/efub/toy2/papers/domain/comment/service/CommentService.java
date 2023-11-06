@@ -2,6 +2,7 @@ package efub.toy2.papers.domain.comment.service;
 
 import efub.toy2.papers.domain.comment.domain.Comment;
 import efub.toy2.papers.domain.comment.dto.CommentRequestDto;
+import efub.toy2.papers.domain.comment.dto.CommentResponseDto;
 import efub.toy2.papers.domain.comment.repository.CommentRepository;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
@@ -25,26 +26,33 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     /* 댓글 생성 */
-    public Comment createComment(Member member,CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(Member member, CommentRequestDto requestDto) {
         Scrap scrap = scrapRepository.findById(requestDto.getScrapId())
                 .orElseThrow(()->new CustomException(ErrorCode.NO_SCRAP_EXIST));
-
         Comment comment = Comment.builder()
                 .commentWriter(member)
                 .commentContent(requestDto.getCommentContent())
                 .scrap(scrap)
                 .build();
-
         commentRepository.save(comment);
-        return comment;
+        Boolean isMine = commentIsMine(member,comment);
+        return new CommentResponseDto(comment,isMine);
     }
 
+    /* 댓글 삭제 */
     public String deleteComment(Member member, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_COMMENT_EXIST));
-        /* 댓글 작성자만 댓글 삭제 가능 */
         if(comment.getCommentWriter().getMemberId() != member.getMemberId()) throw new CustomException(ErrorCode.INVALID_MEMBER);
         commentRepository.delete(comment);
         return "댓글이 삭제되었습니다.";
+    }
+
+    /* 댓글 작성자 확인 */
+    public Boolean commentIsMine(Member member , Comment comment){
+        Boolean isMine;
+        if(comment.getCommentWriter().getMemberId() == member.getMemberId()) isMine= true;
+        else isMine = false;
+        return isMine;
     }
 }

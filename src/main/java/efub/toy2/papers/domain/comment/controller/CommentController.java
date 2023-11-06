@@ -20,7 +20,7 @@ public class CommentController {
     /* 댓글 생성 */
     @PostMapping("/comments")
     public CommentResponseDto createComment(@AuthUser Member member, @RequestBody CommentRequestDto requestDto){
-        return new CommentResponseDto(commentService.createComment(member,requestDto));
+        return commentService.createComment(member,requestDto);
     }
 
     /* 댓글 삭제 */
