@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -48,5 +51,17 @@ public class ReplyService {
         if(reply.getReplyWriter().getMemberId() == member.getMemberId()) isMine = true;
         else isMine = false;
         return isMine;
+    }
+
+    public List<ReplyResponseDto> findReplyListByCommentId(Member member, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new CustomException(ErrorCode.NO_COMMENT_EXIST));
+        List<Reply> replyList = replyRepository.findAllByCommentOrderByCreatedAt(comment);
+        List<ReplyResponseDto> responseDtoList = new ArrayList<>();
+        for(Reply reply : replyList){
+            Boolean isMine = replyIsMine(reply,member);
+            responseDtoList.add(new ReplyResponseDto(reply,isMine));
+        }
+        return responseDtoList;
     }
 }

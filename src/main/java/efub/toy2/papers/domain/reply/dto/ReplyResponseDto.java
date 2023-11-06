@@ -22,5 +22,6 @@ public class ReplyResponseDto {
         this.replyContent = reply.getReplyContent();
         this.commentId = reply.getComment().getCommentId();
         this.createdAt = reply.getCreatedAt();
+        this.replyIsMine = replyIsMine;
     }
 }

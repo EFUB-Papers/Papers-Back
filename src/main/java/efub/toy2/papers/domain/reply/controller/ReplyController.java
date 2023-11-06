@@ -9,23 +9,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/replies")
+@RequestMapping
 public class ReplyController {
     private final ReplyService replyService;
 
     /* 대댓글 생성 */
-    @PostMapping
+    @PostMapping("/replies")
     public ReplyResponseDto createReply(@AuthUser Member member, @RequestBody ReplyRequestDto requestDto){
         return replyService.createReply(member,requestDto);
     }
 
     /* 대댓글 삭제 */
-    @DeleteMapping("/{replyId}")
+    @DeleteMapping("/replies/{replyId}")
     public String deleteReply(@AuthUser Member member , @PathVariable Long replyId){
         return replyService.deleteReply(member,replyId);
     }
 
+    /* 댓글의 대댓글 목록 조회 */
+    @GetMapping("/comments/{commentId}/replies")
+    public List<ReplyResponseDto> getCommentReplyList(@AuthUser Member member , @PathVariable Long commentId){
+        return replyService.findReplyListByCommentId(member,commentId);
+    }
 }
