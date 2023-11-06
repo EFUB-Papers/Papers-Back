@@ -44,9 +44,20 @@ public class Member extends BaseTimeEntity {
         this.defaultFolder = defaultFolder;
     }
 
-    public void updateMemberInfo(String nickname , String introduce , String profileImgUrl){
+    /* 유저 정보 설정 */
+    public void setMemberInfo(String nickname , String introduce , String profileImgUrl){
         this.nickname = nickname;
         this.introduce = introduce;
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    /* 한 줄 소개 수정 */
+    public void updateIntroduce(String introduce){
+        this.introduce = introduce;
+    }
+
+    /* 프로필 이미지 수정 */
+    public void updateProfileImgUrl(String profileImgUrl){
         this.profileImgUrl = profileImgUrl;
     }
 

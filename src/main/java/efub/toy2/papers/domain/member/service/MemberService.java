@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class MemberService {
 
         Folder folder = folderService.createDefaultFolder(member);
         member.setDefaultFolder(folder);
-        /* 기본 폴더 생성 코드도 추가하기  앵간하면 이 함수 호출된 서비스에..? 흐음 */
+
         return member;
     }
 
@@ -70,9 +71,9 @@ public class MemberService {
     }
 
     /* 멤버 프로필 설정 */
-    public MemberInfoDto updateProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) {
+    public MemberInfoDto setProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) {
         List<String> imgPaths = s3Service.upload(images);
-        member.updateMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
+        member.setMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
         return new MemberInfoDto(member);
     }
 
@@ -84,5 +85,20 @@ public class MemberService {
             responseDtoList.add(new FolderResponseDto(folder));
         }
         return responseDtoList;
+    }
+
+    /* 닉네임 제외한 회원 정보 수정 */
+    public MemberInfoDto updateProfile(Member member, String introduce, List<MultipartFile> images) throws IOException {
+        /* 이미지 수정이 있는 경우 */
+        if(images != null){
+            s3Service.deleteImage(member.getProfileImgUrl());
+            List<String> imgPaths = s3Service.upload(images);
+            member.updateProfileImgUrl(imgPaths.get(0));
+        }
+        /* 한 줄 소개 수정이 있는 경우 */
+        if(introduce != null){
+            member.updateIntroduce(introduce);
+        }
+        return new MemberInfoDto(member);
     }
 }

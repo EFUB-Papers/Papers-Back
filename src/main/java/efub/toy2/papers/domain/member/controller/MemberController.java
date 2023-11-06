@@ -56,16 +56,24 @@ public class MemberController {
 
     /* 프로필 설정 */
     @PostMapping("/members/profile")
-    public MemberInfoDto updateProfile(@AuthUser Member member,
+    public MemberInfoDto setProfile(@AuthUser Member member,
                                        @RequestPart(value="dto") ProfileRequestDto requestDto ,
-                                       @RequestPart(value="profileImg" ,required = false) List<MultipartFile> images) throws IOException{
-        return memberService.updateProfile(member,requestDto,images);
+                                       @RequestPart(value="profileImg") List<MultipartFile> images) throws IOException{
+        return memberService.setProfile(member,requestDto,images);
     }
 
     /* 회원 별 폴더 조회 */
     @GetMapping("/members/folders")
     public List<FolderResponseDto> getMemberFolderList(@AuthUser Member member){
         return memberService.findFolderListByMember(member);
+    }
+
+    /* 프로필 수정 : 닉네임 제외 */
+    @PutMapping("/members/profile/update")
+    public MemberInfoDto updateProfile(@AuthUser Member member,
+                                       @RequestPart(value = "introduce" , required = false) String introduce,
+                                       @RequestPart(value="profileImg" , required = false) List<MultipartFile> images) throws IOException{
+        return memberService.updateProfile(member,introduce,images);
     }
 
 
