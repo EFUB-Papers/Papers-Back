@@ -9,6 +9,7 @@ public class MemberInfoDto {
     public String nickname;
     public String email;
     public String introduce;
+    public String profileImgUrl;
     public Long defaultFolderId;
 
     @Builder
@@ -16,6 +17,7 @@ public class MemberInfoDto {
         this.nickname = member.getNickname();
         this.email = member.getEmail();
         this.introduce =member.getIntroduce();
+        this.profileImgUrl =member.getProfileImgUrl();
         this.defaultFolderId = member.getDefaultFolder().getFolderId();
     }
 }

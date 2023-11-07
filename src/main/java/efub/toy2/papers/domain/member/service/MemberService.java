@@ -1,18 +1,27 @@
 package efub.toy2.papers.domain.member.service;
 
 import efub.toy2.papers.domain.folder.domain.Folder;
+import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
+import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
 import efub.toy2.papers.domain.member.oauth.GoogleUser;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
+import efub.toy2.papers.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -20,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final FolderRepository folderRepository;
     public final FolderService folderService;
+    public final S3Service s3Service;
 
     public Member saveMember(@RequestBody  GoogleUser googleUser) {
         Member member = Member.builder()
@@ -31,7 +42,7 @@ public class MemberService {
 
         Folder folder = folderService.createDefaultFolder(member);
         member.setDefaultFolder(folder);
-        /* 기본 폴더 생성 코드도 추가하기  앵간하면 이 함수 호출된 서비스에..? 흐음 */
+
         return member;
     }
 
@@ -57,5 +68,37 @@ public class MemberService {
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_MEMBER_EXIST));
+    }
+
+    /* 멤버 프로필 설정 */
+    public MemberInfoDto setProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) {
+        List<String> imgPaths = s3Service.upload(images);
+        member.setMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
+        return new MemberInfoDto(member);
+    }
+
+    /* 회원 별 폴더 목록 조회 */
+    public List<FolderResponseDto> findFolderListByMember(Member member) {
+        List<Folder> folderList = folderService.findFolderListByOwner(member);
+        List<FolderResponseDto> responseDtoList = new ArrayList<>();
+        for(Folder folder : folderList){
+            responseDtoList.add(new FolderResponseDto(folder));
+        }
+        return responseDtoList;
+    }
+
+    /* 닉네임 제외한 회원 정보 수정 */
+    public MemberInfoDto updateProfile(Member member, String introduce, List<MultipartFile> images) throws IOException {
+        /* 이미지 수정이 있는 경우 */
+        if(images != null){
+            s3Service.deleteImage(member.getProfileImgUrl());
+            List<String> imgPaths = s3Service.upload(images);
+            member.updateProfileImgUrl(imgPaths.get(0));
+        }
+        /* 한 줄 소개 수정이 있는 경우 */
+        if(introduce != null){
+            member.updateIntroduce(introduce);
+        }
+        return new MemberInfoDto(member);
     }
 }

@@ -90,4 +90,9 @@ public class FolderService {
         else isOwner = false;
         return isOwner;
     }
+
+    /* 회원 별 폴더 목록 검색 */
+    public List<Folder> findFolderListByOwner(Member member){
+        return folderRepository.findAllByFolderOwner(member);
+    }
 }
