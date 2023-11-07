@@ -30,7 +30,13 @@ public enum ErrorCode {
     DEFAUT_FOLDER_CANNOT_DELETE(HttpStatus.BAD_REQUEST,"기본 폴더는 삭제할 수 없습니다."),
     FILE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST,"파일 업로드에 실패하였습니다." ),
     FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST,"파일 삭제에 실패하였습니다." ),
-    FILE_CONVERT_ERROR(HttpStatus.BAD_REQUEST,"파일 변한에 실패하였습니다." );
+    FILE_CONVERT_ERROR(HttpStatus.BAD_REQUEST,"파일 변한에 실패하였습니다." ),
+
+    /* follow */
+    NO_FOLLOW_EXIST(HttpStatus.BAD_REQUEST , "존재하지 않는 팔로우입니다."),
+    ALREADY_FOLLOWED(HttpStatus.BAD_REQUEST,"이미 팔로우되어있는 회원입니다.")
+    ;
+
 
 
     private final HttpStatus status;

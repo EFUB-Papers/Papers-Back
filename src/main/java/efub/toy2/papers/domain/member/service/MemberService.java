@@ -33,6 +33,7 @@ public class MemberService {
     public final FolderService folderService;
     public final S3Service s3Service;
 
+    /* 멤버 생성 */
     public Member saveMember(@RequestBody  GoogleUser googleUser) {
         Member member = Member.builder()
                 .email(googleUser.getEmail())
@@ -46,6 +47,8 @@ public class MemberService {
         return member;
     }
 
+    /* 신규 회원인지 조사 */
+    @Transactional(readOnly = true)
     public Boolean checkJoined(String email) {
         System.out.println("checkJoined emailL "+email);
         Boolean isJoined = memberRepository.existsMemberByEmail(email);
@@ -60,11 +63,13 @@ public class MemberService {
     }
 
     /* 닉네임 중복 조회 */
+    @Transactional(readOnly = true)
     public Boolean isNicknameExist(String nickname) {
         return memberRepository.existsMemberByNickname(nickname);
     }
 
     /* 닉네임으로 멤버 조회 */
+    @Transactional(readOnly = true)
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_MEMBER_EXIST));
@@ -89,13 +94,11 @@ public class MemberService {
 
     /* 닉네임 제외한 회원 정보 수정 */
     public MemberInfoDto updateProfile(Member member, String introduce, List<MultipartFile> images) throws IOException {
-        /* 이미지 수정이 있는 경우 */
         if(images != null){
             s3Service.deleteImage(member.getProfileImgUrl());
             List<String> imgPaths = s3Service.upload(images);
             member.updateProfileImgUrl(imgPaths.get(0));
         }
-        /* 한 줄 소개 수정이 있는 경우 */
         if(introduce != null){
             member.updateIntroduce(introduce);
         }
