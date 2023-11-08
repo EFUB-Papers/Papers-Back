@@ -111,4 +111,9 @@ public class MemberService {
     public Boolean isAdminMember(Member member){
         return (member.getRole() == Role.ADMIN);
     }
+
+    /* 닉네임으로 회원 프로필 이미지 조회 */
+    public String getProfileImg(Member member){
+        return member.getProfileImgUrl();
+    }
 }

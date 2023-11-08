@@ -6,6 +6,7 @@ import efub.toy2.papers.domain.comment.dto.CommentResponseDto;
 import efub.toy2.papers.domain.comment.repository.CommentRepository;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
+import efub.toy2.papers.domain.member.service.MemberService;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.scrap.repository.ScrapRepository;
 import efub.toy2.papers.global.exception.CustomException;
@@ -27,6 +28,7 @@ public class CommentService {
 
     private final ScrapRepository scrapRepository;
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
 
     /* 댓글 생성 */
     public CommentResponseDto createComment(Member member, CommentRequestDto requestDto) {
@@ -38,8 +40,10 @@ public class CommentService {
                 .scrap(scrap)
                 .build();
         commentRepository.save(comment);
+
         Boolean isMine = commentIsMine(member,comment);
-        return new CommentResponseDto(comment,isMine);
+        String profileImgUrl = memberService.getProfileImg(member);
+        return new CommentResponseDto(comment,isMine, profileImgUrl);
     }
 
     /* 댓글 삭제 */
@@ -53,13 +57,13 @@ public class CommentService {
 
     /* 스크랩의 댓글 목록 조회 */
     public List<CommentResponseDto> findCommentListByScrapId(Member member, Long scrapId) {
-        Scrap scrap = scrapRepository.findById(scrapId)
-                .orElseThrow(()->new CustomException(ErrorCode.NO_SCRAP_EXIST));
+        Scrap scrap = findScrapByScrapId(scrapId);
         List<Comment> commentList = commentRepository.findAllByScrapOrderByCreatedAt(scrap);
         List<CommentResponseDto> commentResponseDtoList =new ArrayList<>();
         for(Comment comment : commentList){
             Boolean isMine = commentIsMine(member,comment);
-            commentResponseDtoList.add(new CommentResponseDto(comment , isMine));
+            String profileImgUrl = memberService.getProfileImg(comment.getCommentWriter());
+            commentResponseDtoList.add(new CommentResponseDto(comment , isMine ,profileImgUrl));
         }
         return commentResponseDtoList;
     }
@@ -70,5 +74,12 @@ public class CommentService {
         if (comment.getCommentWriter().getMemberId() == member.getMemberId()) isMine = true;
         else isMine = false;
         return isMine;
+    }
+
+    /* 스크랩 id로 스크랩 조회 : 이후 scrapService 로 옮기기 */
+    public Scrap findScrapByScrapId(Long scrapId){
+        Scrap scrap = scrapRepository.findById(scrapId)
+                .orElseThrow(()->new CustomException(ErrorCode.NO_SCRAP_EXIST));
+        return scrap;
     }
 }
