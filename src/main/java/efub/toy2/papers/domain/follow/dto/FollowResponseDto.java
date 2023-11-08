@@ -9,12 +9,16 @@ import lombok.Getter;
 public class FollowResponseDto {
     public Long followId;
     public String followerNickname;
+    public String followerProfileImg;
     public String followingNickname;
+    public String followingProfileImg;
 
     @Builder
-    public FollowResponseDto(Follow follow){
+    public FollowResponseDto(Follow follow , String followerProfileImg , String followingProfileImg){
         this.followId = follow.getFollowId();
         this.followerNickname = follow.getFollower().getNickname();
         this.followingNickname = follow.getFollowing().getNickname();
+        this.followerProfileImg = followerProfileImg;
+        this.followingProfileImg = followingProfileImg;
     }
 }

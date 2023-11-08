@@ -32,7 +32,8 @@ public class FollowService {
                 .following(toFollow)
                 .build();
         followRepository.save(follow);
-        return new FollowResponseDto(follow);
+        return new FollowResponseDto(follow ,
+                memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing()));
     }
 
     /* 팔로우 삭제 */
@@ -48,7 +49,8 @@ public class FollowService {
         List<Follow> followList = findFollowListByFollower(member);
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         for(Follow follow : followList){
-            responseDtoList.add(new FollowResponseDto(follow));
+            responseDtoList.add(new FollowResponseDto(follow,
+                    memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing())));
         }
         return responseDtoList;
     }
@@ -58,7 +60,8 @@ public class FollowService {
         List<Follow> followList = findFollowListByFollowing(member);
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         for(Follow follow:followList){
-            responseDtoList.add(new FollowResponseDto(follow));
+            responseDtoList.add(new FollowResponseDto(follow,
+                    memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing())));
         }
         return responseDtoList;
     }
@@ -77,6 +80,7 @@ public class FollowService {
                 .orElseThrow(()->new CustomException(ErrorCode.NO_FOLLOW_EXIST));
     }
 
+
     /* 팔로워로 팔로우 조회 */
     public List<Follow> findFollowListByFollower(Member member){
         return followRepository.findAllByFollower(member);
@@ -86,8 +90,5 @@ public class FollowService {
     public List<Follow> findFollowListByFollowing(Member member){
         return followRepository.findAllByFollowing(member);
     }
-
-
-
 
 }
