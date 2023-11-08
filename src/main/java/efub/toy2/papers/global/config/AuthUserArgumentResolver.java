@@ -1,6 +1,7 @@
 package efub.toy2.papers.global.config;
 
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.domain.Role;
 import efub.toy2.papers.domain.member.service.JwtTokenProvider;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -36,6 +37,11 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         String token = tokenProvider.resolveToken(Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)));
+        /* 토큰 값이 없을 경우, GUEST 자격의 멤버 생성하여 반환 */
+        if(token == null){
+            Member member = new Member(null,null,null,null , Role.GUEST);
+            return member;
+        }
 
         Authentication authentication = tokenProvider.getAuthentication(token);
         return (Member) authentication.getPrincipal();

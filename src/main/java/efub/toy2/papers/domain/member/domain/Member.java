@@ -37,11 +37,12 @@ public class Member extends BaseTimeEntity {
     private Folder defaultFolder;
 
     @Builder
-    public Member(String email, String nickname , String introduce, Folder defaultFolder){
+    public Member(String email, String nickname , String introduce, Folder defaultFolder , Role role){
         this.email = email;
         this.nickname = nickname;
         this.introduce = introduce;
         this.defaultFolder = defaultFolder;
+        this.role = role;
     }
 
     /* 유저 정보 설정 */

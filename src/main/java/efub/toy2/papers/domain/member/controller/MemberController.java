@@ -11,6 +11,8 @@ import efub.toy2.papers.domain.member.dto.response.ReissueResponseDto;
 import efub.toy2.papers.domain.member.service.AuthService;
 import efub.toy2.papers.domain.member.service.MemberService;
 import efub.toy2.papers.global.config.AuthUser;
+import efub.toy2.papers.global.exception.CustomException;
+import efub.toy2.papers.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -59,12 +61,14 @@ public class MemberController {
     public MemberInfoDto setProfile(@AuthUser Member member,
                                        @RequestPart(value="dto") ProfileRequestDto requestDto ,
                                        @RequestPart(value="profileImg") List<MultipartFile> images) throws IOException{
+        if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.setProfile(member,requestDto,images);
     }
 
     /* 회원 별 폴더 조회 */
     @GetMapping("/members/folders")
     public List<FolderResponseDto> getMemberFolderList(@AuthUser Member member){
+        if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.findFolderListByMember(member);
     }
 
@@ -73,12 +77,9 @@ public class MemberController {
     public MemberInfoDto updateProfile(@AuthUser Member member,
                                        @RequestPart(value = "introduce" , required = false) String introduce,
                                        @RequestPart(value="profileImg" , required = false) List<MultipartFile> images) throws IOException{
+        if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.updateProfile(member,introduce,images);
     }
-
-
-
-
 
 
 
