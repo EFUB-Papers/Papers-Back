@@ -48,8 +48,7 @@ public class CommentService {
 
     /* 댓글 삭제 */
     public String deleteComment(Member member, Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(()->new CustomException(ErrorCode.NO_COMMENT_EXIST));
+        Comment comment = findCommentBuCommentId(commentId);
         if(comment.getCommentWriter().getMemberId() != member.getMemberId()) throw new CustomException(ErrorCode.INVALID_MEMBER);
         commentRepository.delete(comment);
         return "댓글이 삭제되었습니다.";
@@ -74,6 +73,12 @@ public class CommentService {
         if (comment.getCommentWriter().getMemberId() == member.getMemberId()) isMine = true;
         else isMine = false;
         return isMine;
+    }
+
+    /* 댓글 id 로 댓글 조회 */
+    public Comment findCommentBuCommentId(Long commentId){
+        return commentRepository.findById(commentId)
+                .orElseThrow(()->new CustomException(ErrorCode.NO_COMMENT_EXIST));
     }
 
     /* 스크랩 id로 스크랩 조회 : 이후 scrapService 로 옮기기 */
