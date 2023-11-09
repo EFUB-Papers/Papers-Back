@@ -10,15 +10,17 @@ import java.time.LocalDateTime;
 public class ReplyResponseDto {
     private Long replyId;
     private String replyWriterNickname;
+    private String replyWriterProfileImg;
     private String replyContent;
     private Long commentId;
     public LocalDateTime createdAt;
     public Boolean replyIsMine;
 
     @Builder
-    public ReplyResponseDto(Reply reply , Boolean replyIsMine){
+    public ReplyResponseDto(Reply reply , Boolean replyIsMine , String profileImg){
         this.replyId= reply.getReplyId();
         this.replyWriterNickname = reply.getReplyWriter().getNickname();
+        this.replyWriterProfileImg = profileImg;
         this.replyContent = reply.getReplyContent();
         this.commentId = reply.getComment().getCommentId();
         this.createdAt = reply.getCreatedAt();

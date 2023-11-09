@@ -5,6 +5,7 @@ import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.domain.Role;
 import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
 import efub.toy2.papers.domain.member.oauth.GoogleUser;
@@ -38,6 +39,7 @@ public class MemberService {
         Member member = Member.builder()
                 .email(googleUser.getEmail())
                 .nickname(googleUser.getEmail())
+                .role(Role.ADMIN)
                 .build();
         memberRepository.save(member);
 
@@ -103,5 +105,15 @@ public class MemberService {
             member.updateIntroduce(introduce);
         }
         return new MemberInfoDto(member);
+    }
+
+    /* 로그인한 유저인지 검사 */
+    public Boolean isAdminMember(Member member){
+        return (member.getRole() == Role.ADMIN);
+    }
+
+    /* 닉네임으로 회원 프로필 이미지 조회 */
+    public String getProfileImg(Member member){
+        return member.getProfileImgUrl();
     }
 }
