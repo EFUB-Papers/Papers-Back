@@ -66,8 +66,9 @@ public class MemberController {
     }
 
     /* 회원 별 폴더 조회 */
-    @GetMapping("/members/folders")
-    public List<FolderResponseDto> getMemberFolderList(@AuthUser Member member){
+    @GetMapping("/members/{nickname}/folders")
+    public List<FolderResponseDto> getMemberFolderList(@PathVariable String nickname){
+        Member member = memberService.findMemberByNickname(nickname);
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.findFolderListByMember(member);
     }
