@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     /* 토큰 재발급 */
-    @PostMapping("/auth/reissue")
+    @GetMapping("/auth/reissue")
     public ReissueResponseDto tokenReissue(HttpServletRequest httpServletRequest){
         return authService.reissue(httpServletRequest);
     }
@@ -82,12 +82,5 @@ public class MemberController {
         return memberService.updateProfile(member,introduce,images);
     }
 
-
-
-    /* 이건 이후 지우기 */
-    @GetMapping("/members/test")
-    public MemberInfoDto memberTest(@AuthUser Member member){
-        return new MemberInfoDto(member);
-    }
 
 }
