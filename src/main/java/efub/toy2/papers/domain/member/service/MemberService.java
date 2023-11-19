@@ -66,7 +66,11 @@ public class MemberService {
 
     /* 닉네임 중복 조회 */
     @Transactional(readOnly = true)
-    public Boolean isNicknameExist(String nickname) {
+    public Boolean isNicknameExist(Member member, String nickname) {
+        /* 본인 닉네임은 중복 조회에서 제외시킴. */
+        if(member.getNickname().equals(nickname)){
+            return false;
+        }
         return memberRepository.existsMemberByNickname(nickname);
     }
 
@@ -78,7 +82,14 @@ public class MemberService {
     }
 
     /* 멤버 프로필 설정 */
-    public MemberInfoDto setProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) {
+    public MemberInfoDto setProfile(Member member, ProfileRequestDto requestDto, List<MultipartFile> images) throws IOException {
+        /* 닉네임 중복 조회 */
+        if(isNicknameExist(member, requestDto.getNickname())) throw new CustomException(ErrorCode.ALREADY_EXIST_NICKNAME);
+
+        /* 이미 설정되어있는 이미지가 있는 경우, 기존 프로필 이미지 삭제 */
+        if(member.getProfileImgUrl() != null){ s3Service.deleteImage(member.getProfileImgUrl()); }
+
+        /* 프로필 설정 */
         List<String> imgPaths = s3Service.upload(images);
         member.setMemberInfo(requestDto.getNickname() , requestDto.getIntroduce() , imgPaths.get(0));
         return new MemberInfoDto(member);
@@ -94,8 +105,21 @@ public class MemberService {
         return responseDtoList;
     }
 
-    /* 닉네임 제외한 회원 정보 수정 */
+    /* 로그인한 유저인지 검사 */
+    public Boolean isAdminMember(Member member){
+        return (member.getRole() == Role.ADMIN);
+    }
+
+    /* 닉네임으로 회원 프로필 이미지 조회 */
+    public String getProfileImg(Member member){
+        return member.getProfileImgUrl();
+    }
+
+
+
+    /* 닉네임 제외한 회원 정보 수정
     public MemberInfoDto updateProfile(Member member, String introduce, List<MultipartFile> images) throws IOException {
+
         if(images != null){
             s3Service.deleteImage(member.getProfileImgUrl());
             List<String> imgPaths = s3Service.upload(images);
@@ -106,14 +130,5 @@ public class MemberService {
         }
         return new MemberInfoDto(member);
     }
-
-    /* 로그인한 유저인지 검사 */
-    public Boolean isAdminMember(Member member){
-        return (member.getRole() == Role.ADMIN);
-    }
-
-    /* 닉네임으로 회원 프로필 이미지 조회 */
-    public String getProfileImg(Member member){
-        return member.getProfileImgUrl();
-    }
+    */
 }

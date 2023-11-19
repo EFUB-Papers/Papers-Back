@@ -45,10 +45,10 @@ public class MemberController {
 
     /* 닉네임 중복 조회 */
     @PostMapping("/members/nickname/isExist")
-    public Boolean isNicknameExist(@RequestBody NicknameRequestDto requestDto){
-        return memberService.isNicknameExist(requestDto.getNickname());
+    public Boolean isNicknameExist(@AuthUser Member member, @RequestBody NicknameRequestDto requestDto){
+        if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
+        return memberService.isNicknameExist(member,requestDto.getNickname());
     }
-
 
     /* 멤버 조회 */
     @PostMapping("/members/search")
@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     /* 프로필 설정 */
-    @PostMapping("/members/profile")
+    @PostMapping ("/members/profile")
     public MemberInfoDto setProfile(@AuthUser Member member,
                                        @RequestPart(value="dto") ProfileRequestDto requestDto ,
                                        @RequestPart(value="profileImg") List<MultipartFile> images) throws IOException{
@@ -73,7 +73,13 @@ public class MemberController {
         return memberService.findFolderListByMember(member);
     }
 
+
+
+
+
+    // 그냥 이 api는 삭제시키기
     /* 프로필 수정 : 닉네임 제외 */
+    /*
     @PutMapping("/members/profile/update")
     public MemberInfoDto updateProfile(@AuthUser Member member,
                                        @RequestPart(value = "introduce" , required = false) String introduce,
@@ -81,6 +87,5 @@ public class MemberController {
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.updateProfile(member,introduce,images);
     }
-
-
+     */
 }
