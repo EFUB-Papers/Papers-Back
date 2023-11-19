@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST,"유효하지 않은 토큰입니다." ),
     NON_LOGIN(HttpStatus.BAD_REQUEST,"로그인이 필요합니다." ),
     INVALID_MEMBER(HttpStatus.BAD_REQUEST,"접근 권한이 없는 회원입니다."),
+    ALREADY_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
 
     /* scrap */
     NO_SCRAP_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 스크랩입니다."),
