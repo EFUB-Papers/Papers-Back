@@ -49,4 +49,10 @@ public class FollowController {
         return followService.getFollowerListByMember(member);
     }
 
+    /* 현재 팔로우 중인지 조회 */
+    @GetMapping("/follows/isFollower/{nickname}")
+    public Boolean isFollower(@AuthUser Member member , @PathVariable String nickname){
+        Member targetMember = memberService.findMemberByNickname(nickname);
+        return followService.isAlreadyFollowed(member,targetMember);
+    }
 }
