@@ -7,6 +7,7 @@ import efub.toy2.papers.domain.member.dto.request.LoginRequestDto;
 import efub.toy2.papers.domain.member.dto.request.NicknameRequestDto;
 import efub.toy2.papers.domain.member.dto.response.LoginResponseDto;
 import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
+import efub.toy2.papers.domain.member.dto.response.MemberSearchResponseDto;
 import efub.toy2.papers.domain.member.dto.response.ReissueResponseDto;
 import efub.toy2.papers.domain.member.service.AuthService;
 import efub.toy2.papers.domain.member.service.MemberService;
@@ -72,6 +73,14 @@ public class MemberController {
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.findFolderListByMember(member);
     }
+
+    /* 랜덤 회원 목록 리스트 조회 : 우선 팔로우하지 않은 회원 목록 조회하기로... 이후 찾아보고 수정. */
+    @GetMapping("/members/random-list")
+    public List<MemberSearchResponseDto> getRandomMemberList(@AuthUser Member member){
+        return memberService.findRandomMemberList(member);
+
+    }
+
 
 
 
