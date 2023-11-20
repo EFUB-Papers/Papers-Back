@@ -117,7 +117,7 @@ public class MemberService {
         return member.getProfileImgUrl();
     }
 
-    /* 랜덤 회원 목록 조회 : 일단 멤버 리스트 앞에서 3개 자르기*/
+    /* 랜덤 회원 목록 조회 : 일단 멤버 리스트 앞에서 3개 자르기
     public List<MemberSearchResponseDto> findRandomMemberList(Member member) {
         List<Member> randomMemberList;
         if(member.getRole().equals("ADMIN")) randomMemberList = memberRepository.findAllByMemberIdIsNot(member.getMemberId());
@@ -130,6 +130,8 @@ public class MemberService {
         if(searchResponseDtoList.size() > 3) return searchResponseDtoList.subList(0,2);
         else return searchResponseDtoList;
     }
+
+     */
 
 
     /* 닉네임 제외한 회원 정보 수정

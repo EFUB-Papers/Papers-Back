@@ -4,6 +4,8 @@ import efub.toy2.papers.domain.follow.domain.Follow;
 import efub.toy2.papers.domain.follow.dto.FollowResponseDto;
 import efub.toy2.papers.domain.follow.repository.FollowRepository;
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.member.dto.response.MemberSearchResponseDto;
+import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.domain.member.service.MemberService;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowService {
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
 
     /* 팔로우 생성 */
@@ -94,8 +97,19 @@ public class FollowService {
     }
 
 
-    /* 팔로우하고 있지 않은 멤버 조회 조회 */
-    public List<Follow> findFollowListByNotFollower(Member member){
-        return followRepository.findAllByFollowerIsNot(member);
+
+    /* 랜덤 멤버 목록 조회 : 팔로우 여부도 함께 , 현재는 랜덤 아님 */
+    public List<MemberSearchResponseDto> findRandomMemberList(Member member) {
+        List<Member> randomMemberList;
+        if(member.getRole().equals("ADMIN")) randomMemberList = memberRepository.findAllByMemberIdIsNot(member.getMemberId());
+        else randomMemberList = memberRepository.findAll();
+
+        List<MemberSearchResponseDto> searchResponseDtoList = new ArrayList<>();
+        for(Member randomMember : randomMemberList){
+            Boolean isFollower = isAlreadyFollowed(member,randomMember);
+            searchResponseDtoList.add(new MemberSearchResponseDto(randomMember , isFollower));
+        }
+        if(searchResponseDtoList.size() > 3) return searchResponseDtoList.subList(0,2);
+        else return searchResponseDtoList;
     }
 }

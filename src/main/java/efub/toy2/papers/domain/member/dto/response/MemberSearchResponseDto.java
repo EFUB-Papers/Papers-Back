@@ -9,12 +9,14 @@ public class MemberSearchResponseDto {
     public String nickname;
     public String introduce;
     public String profileImgURL;
+    public Boolean isFollower;
 
     @Builder
-    public MemberSearchResponseDto(Member member){
+    public MemberSearchResponseDto(Member member , Boolean isFollower){
         this.nickname = member.getNickname();
         this.introduce = member.getIntroduce();
         this.profileImgURL = member.getProfileImgUrl();
+        this.isFollower = isFollower;
 
     }
 }
