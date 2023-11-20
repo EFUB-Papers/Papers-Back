@@ -74,12 +74,11 @@ public class FollowService {
     }
 
 
-    /* 팔로워와팔로잉으로 팔로우 조회 */
+    /* 팔로워와 팔로잉으로 팔로우 조회 */
     public Follow findFollowByFollowerAndFollowing(Member follower, Member following){
         return followRepository.findByFollowerAndFollowing(follower,following)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_FOLLOW_EXIST));
     }
-
 
     /* 팔로워로 팔로우 조회 */
     public List<Follow> findFollowListByFollower(Member member){
@@ -91,4 +90,9 @@ public class FollowService {
         return followRepository.findAllByFollowing(member);
     }
 
+
+    /* 팔로우하고 있지 않은 멤버 조회 조회 */
+    public List<Follow> findFollowListByNotFollower(Member member){
+        return followRepository.findAllByFollowerIsNot(member);
+    }
 }

@@ -4,10 +4,13 @@ import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
+import efub.toy2.papers.domain.follow.domain.Follow;
+import efub.toy2.papers.domain.follow.service.FollowService;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.domain.Role;
 import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
+import efub.toy2.papers.domain.member.dto.response.MemberSearchResponseDto;
 import efub.toy2.papers.domain.member.oauth.GoogleUser;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.global.exception.CustomException;
@@ -30,7 +33,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final FolderRepository folderRepository;
     public final FolderService folderService;
     public final S3Service s3Service;
 
@@ -115,6 +117,19 @@ public class MemberService {
         return member.getProfileImgUrl();
     }
 
+    /* 랜덤 회원 목록 조회 : 일단 멤버 리스트 앞에서 3개 자르기*/
+    public List<MemberSearchResponseDto> findRandomMemberList(Member member) {
+        List<Member> randomMemberList;
+        if(member.getRole().equals("ADMIN")) randomMemberList = memberRepository.findAllByMemberIdIsNot(member.getMemberId());
+        else randomMemberList = memberRepository.findAll();
+
+        List<MemberSearchResponseDto> searchResponseDtoList = new ArrayList<>();
+        for(Member randomMember : randomMemberList){
+            searchResponseDtoList.add(new MemberSearchResponseDto(randomMember));
+        }
+        if(searchResponseDtoList.size() > 3) return searchResponseDtoList.subList(0,2);
+        else return searchResponseDtoList;
+    }
 
 
     /* 닉네임 제외한 회원 정보 수정
