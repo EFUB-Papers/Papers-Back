@@ -1,6 +1,7 @@
 package efub.toy2.papers.domain.member.controller;
 
 import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
+import efub.toy2.papers.domain.follow.service.FollowService;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.request.LoginRequestDto;
@@ -30,6 +31,7 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
+    private final FollowService followService;
 
     /* 로그인 */
     @PostMapping("/auth/login")
@@ -77,24 +79,9 @@ public class MemberController {
     /* 랜덤 회원 목록 리스트 조회 : 우선 팔로우하지 않은 회원 목록 조회하기로... 이후 찾아보고 수정. */
     @GetMapping("/members/random-list")
     public List<MemberSearchResponseDto> getRandomMemberList(@AuthUser Member member){
-        return memberService.findRandomMemberList(member);
-
+        return followService.findRandomMemberList(member);
     }
 
 
 
-
-
-
-    // 그냥 이 api는 삭제시키기
-    /* 프로필 수정 : 닉네임 제외 */
-    /*
-    @PutMapping("/members/profile/update")
-    public MemberInfoDto updateProfile(@AuthUser Member member,
-                                       @RequestPart(value = "introduce" , required = false) String introduce,
-                                       @RequestPart(value="profileImg" , required = false) List<MultipartFile> images) throws IOException{
-        if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
-        return memberService.updateProfile(member,introduce,images);
-    }
-     */
 }
