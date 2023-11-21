@@ -12,4 +12,5 @@ public interface ScrapLikeRepository extends JpaRepository <ScrapLike, Long> {
     Boolean existsScrapLikeByScrap (Scrap scrap);
     List<ScrapLike> findAllByScrap (Scrap scrap);
     List<ScrapLike> findAllByMember (Member member);
+    Optional<ScrapLike> findByScrapAndMember (Scrap scrap, Member member);
 }
