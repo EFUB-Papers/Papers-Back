@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     /* scrap */
     NO_SCRAP_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 스크랩입니다."),
+    INVALID_SEARCHBY(HttpStatus.BAD_REQUEST , "유효하지 않는 검색기준입니다."),
 
     /* comment */
     NO_COMMENT_EXIST(HttpStatus.BAD_REQUEST,"존재하지 않는 댓글입니다."),

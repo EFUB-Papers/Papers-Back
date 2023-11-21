@@ -4,6 +4,7 @@ import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,10 @@ public class ScrapLike extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public ScrapLike (Scrap scrap, Member member) {
+        this.scrap = scrap;
+        this.member = member;
+    }
 }

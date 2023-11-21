@@ -3,12 +3,18 @@ package efub.toy2.papers.domain.scrap.domain;
 import efub.toy2.papers.domain.category.domain.Category;
 import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.domain.member.domain.Member;
+import efub.toy2.papers.domain.scrap.dto.request.ScrapUpdateRequestDto;
+import efub.toy2.papers.domain.scrap.dto.request.ScrapWriteRequestDto;
+import efub.toy2.papers.domain.scrapTag.domain.ScrapTag;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,6 +34,9 @@ public class Scrap extends BaseTimeEntity {
     @Column(nullable = false)
     private String link;
 
+    @Column
+    private String thumbnailUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scrap_writer_id")
     private Member scrapWriter;
@@ -39,4 +48,31 @@ public class Scrap extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "scrap")
+    private List<ScrapTag> tags;
+
+    @Builder
+    public Scrap (ScrapWriteRequestDto requestDto, String thumbnailUrl, Member scrapWriter, Folder folder, Category category) {
+        this.title = requestDto.getScrapTitle();
+        this.scrapContent = requestDto.getScrapContent();
+        this.link = requestDto.getScrapLink();
+        this.thumbnailUrl = thumbnailUrl;
+        this.scrapWriter = scrapWriter;
+        this.folder = folder;
+        this.category = category;
+        this.tags = new ArrayList<>();
+    }
+
+    // 수정
+    public void updateScrap (ScrapUpdateRequestDto requestDto, String thumbnailUrl, Folder folder, Category category) {
+        this.title = requestDto.getScrapTitle();
+        this.scrapContent = requestDto.getScrapContent();
+        this.link = requestDto.getScrapLink();
+        this.thumbnailUrl = thumbnailUrl;
+        this.folder = folder;
+        this.category = category;
+        this.tags = new ArrayList<>();
+    }
+
 }
