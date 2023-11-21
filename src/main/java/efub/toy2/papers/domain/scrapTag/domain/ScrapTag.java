@@ -4,6 +4,7 @@ import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.tag.domain.Tag;
 import efub.toy2.papers.global.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,10 @@ public class ScrapTag extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Builder
+    public ScrapTag (Tag tag, Scrap scrap) {
+        this.tag = tag;
+        this.scrap = scrap;
+    }
 }
