@@ -6,6 +6,7 @@ import efub.toy2.papers.domain.scrapTag.domain.ScrapTag;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ScrapResponseDto {
     private int likeCount;  // 해당 스크랩의 좋아요 개수
     private List<CommentResponseDto> comments;
     private List<String> tags;
+    private LocalDateTime createdAt;
 
     @Builder
     public ScrapResponseDto (Scrap scrap, Boolean liked, int likeCount, List<CommentResponseDto> comments) {
@@ -43,5 +45,6 @@ public class ScrapResponseDto {
         for(ScrapTag tag : scrap.getTags()) {
             tags.add(tag.getTag().getTagName());
         }
+        this.createdAt = scrap.getCreatedAt();
     }
 }
