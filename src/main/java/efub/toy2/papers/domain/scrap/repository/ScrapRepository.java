@@ -11,7 +11,7 @@ import java.util.List;
 public interface ScrapRepository extends JpaRepository<Scrap , Long>, JpaSpecificationExecutor<Scrap> {
     List<Scrap> findAllByCategory(Category category);
     List<Scrap> findAllByFolderOrderByCreatedAtDesc(Folder folder);
-    List<Scrap> findAllOrderByCreatedAt();
+    List<Scrap> findAllByOrderByCreatedAtDesc();
     List<Scrap> findScrapsByTitleContaining(String query);
     List<Scrap> findScrapsByScrapContentContaining(String query);
 }
