@@ -170,7 +170,7 @@ public class ScrapService {
     // 추천 스크랩 리스트 조회 (최신 스크랩 목록)
     public ScrapListResponseDto getRecommendScrap(Long page) {
         // 모든 스크랩 리스트를 시간순으로 받아오기
-        List<Scrap> scraps= scrapRepository.findAllOrderByCreatedAt();
+        List<Scrap> scraps= scrapRepository.findAllByOrderByCreatedAtDesc();
         return paging(scraps, page);
     }
 
