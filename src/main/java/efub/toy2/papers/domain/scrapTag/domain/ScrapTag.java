@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -21,10 +23,12 @@ public class ScrapTag extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scrap_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Scrap scrap;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Tag tag;
 
     @Builder
