@@ -62,7 +62,7 @@ public class ScrapService {
     // 새 스크랩 저장
     public Scrap addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) {
         // 새 스크랩 생성 및 저장
-        List<String> imgPaths = s3Service.upload(thumbnail);
+        List<String> imgPaths = s3Service.uploadThumbnail(thumbnail);
         Member writer = memberRepository.findByNickname(member.getNickname()).get();
         Folder folder = folderRepository.findById(requestDto.getFolderId()).get();
         Category category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
@@ -99,7 +99,7 @@ public class ScrapService {
             throw new CustomException(ErrorCode.INVALID_MEMBER);
 
         // 태그를 제외한 데이터 수정
-        List<String> imgPaths = s3Service.upload(thumbnail);
+        List<String> imgPaths = s3Service.uploadThumbnail(thumbnail);
         Folder folder = folderRepository.findById(requestDto.getFolderId()).get();
         Category category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
         Scrap savedScrap = scrapRepository.findById(scrapId).get();

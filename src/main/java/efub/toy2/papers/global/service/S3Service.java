@@ -59,7 +59,7 @@ public class S3Service {
     }
 
 
-    /* 이미지 업로드 */
+    /* 이미지 업로드(회원 프로필사진) */
     public List<String> upload(List<MultipartFile> multipartFile) {
         List<String> imgUrlList = new ArrayList<>();
 
@@ -74,6 +74,28 @@ public class S3Service {
                 amazonS3Client.putObject(new PutObjectRequest(bucket+"/member/profile", fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
                 imgUrlList.add(amazonS3Client.getUrl(bucket+"/member/profile", fileName).toString());
+            } catch(IOException e) {
+                throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
+            }
+        }
+        return imgUrlList;
+    }
+
+    /* 이미지 업로드(스크랩 썸네일) */
+    public List<String> uploadThumbnail(List<MultipartFile> multipartFile) {
+        List<String> imgUrlList = new ArrayList<>();
+
+        /* forEach 구문을 통해 multipartFile 로 넘어온 파일들 하나씩 fileNameList 에 추가 */
+        for (MultipartFile file : multipartFile) {
+            String fileName = createFileName(file.getOriginalFilename());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(file.getSize());
+            objectMetadata.setContentType(file.getContentType());
+
+            try(InputStream inputStream = file.getInputStream()) {
+                amazonS3Client.putObject(new PutObjectRequest(bucket+"/scrap/thumbnail", fileName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                imgUrlList.add(amazonS3Client.getUrl(bucket+"/scrap/thumbnail", fileName).toString());
             } catch(IOException e) {
                 throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
             }
