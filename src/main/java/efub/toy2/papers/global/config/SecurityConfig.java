@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .antMatchers("/members/**").permitAll()
                 .antMatchers("/chat/**").permitAll()
                 .antMatchers("/chatrooms/**").permitAll()
+                .antMatchers("/scraps/**").permitAll()
 
                 .anyRequest().permitAll()
                 .and()

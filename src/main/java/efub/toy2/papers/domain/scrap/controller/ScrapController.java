@@ -28,6 +28,12 @@ public class ScrapController {
     private final ScrapService scrapService;
     private final MemberService memberService;
 
+    // 접속 테스트
+    @GetMapping("/test")
+    public String testMethod () {
+        return "Test successed";
+    }
+
     // 스크랩 작성
     @PostMapping
     public ScrapResponseDto addScrap (@AuthUser Member member,
