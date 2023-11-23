@@ -171,7 +171,7 @@ public class ScrapService {
     public ScrapListResponseDto getRecommendScrap(Long page) {
         // 모든 스크랩 리스트를 시간순으로 받아오기
         List<Scrap> scraps= scrapRepository.findAllByOrderByCreatedAtDesc();
-        return paging(scraps, page);
+        return paging(scraps, page, 9);
     }
 
     // 스크랩 검색
@@ -208,7 +208,7 @@ public class ScrapService {
                 scraps.add(s);
         }
 
-        return paging(scraps, page);
+        return paging(scraps, page, 10);
     }
 
     // 카테고리별 스크랩 목록 조회
@@ -216,7 +216,7 @@ public class ScrapService {
         Category foundCategory = categoryRepository.findByCategoryName(category).get();
         List<Scrap> scraps= scrapRepository.findAllByCategory(foundCategory);
 
-        return paging(scraps, page);
+        return paging(scraps, page, 10);
     }
 
     // 로그인한 사용자가 좋아요를 누른 스크랩 목록 조회
@@ -229,25 +229,25 @@ public class ScrapService {
         for(ScrapLike like : foundLikes)
             scraps.add(scrapRepository.findById(like.getScrap().getScrapId()).get());
 
-        return paging(scraps, page);
+        return paging(scraps, page, 10);
     }
 
 
-    // 페이징 함수
-    private ScrapListResponseDto paging (List<Scrap> scraps, Long page) {
+    // 페이징 함수 (limit= 한 페이지당 스크랩 수)
+    private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
         int size = scraps.size();
 
         // 총 페이지 개수 계산
         Long lastPage = size/10L;
-        if(size%10 != 0) lastPage++;
+        if(size%limit != 0) lastPage++;
 
         // 전달받은 페이지에 맞게 리스트 생성
-        int start = (int)((page-1)*10);
+        int start = (int)((page-1)*limit);
         List<Scrap> result = new ArrayList<>();
         if(page == lastPage)
             for(int i=start; i<size; i++) result.add(scraps.get(i));
         else
-            for(int i= start; i<start+10; i++) result.add(scraps.get(i));
+            for(int i= start; i<start+limit; i++) result.add(scraps.get(i));
 
         // Dto로 변환하여 리턴
         List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
