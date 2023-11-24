@@ -25,6 +25,7 @@ import efub.toy2.papers.domain.scrapLike.repository.ScrapLikeRepository;
 import efub.toy2.papers.domain.scrapTag.domain.ScrapTag;
 import efub.toy2.papers.domain.scrapTag.repository.ScrapTagRepository;
 import efub.toy2.papers.domain.tag.domain.Tag;
+import efub.toy2.papers.domain.tag.dto.request.TagWriteRequestDto;
 import efub.toy2.papers.domain.tag.repository.TagRepository;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -76,8 +77,9 @@ public class ScrapService {
                         .build()
         );
         // 태그 다대다 관계 저장
-        for (String tagName : requestDto.getTags()) {
+        for (TagWriteRequestDto tagDto : requestDto.getTags()) {
             // 존재하지 않는 태그일 경우 새로 태그를 DB에 추가
+            String tagName = tagDto.getTagName();
             Tag foundTag;
             if(!tagRepository.existsTagByTagName(tagName)) {
                 foundTag = tagRepository.save(new Tag(tagName));
@@ -106,8 +108,9 @@ public class ScrapService {
         savedScrap.updateScrap(requestDto, imgPaths.get(0), folder, category);
 
         // 태그 다대다 관계 갱신
-        for (String tagName : requestDto.getTags()) {
+        for (TagWriteRequestDto tagDto : requestDto.getTags()) {
             // 존재하지 않는 태그일 경우 새로 태그를 DB에 추가
+            String tagName = tagDto.getTagName();
             Tag foundTag;
             if(!tagRepository.existsTagByTagName(tagName)) {
                 foundTag = tagRepository.save(new Tag(tagName));
