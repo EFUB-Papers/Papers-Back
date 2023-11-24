@@ -108,6 +108,11 @@ public class ScrapService {
         savedScrap.updateScrap(requestDto, imgPaths.get(0), folder, category);
 
         // 태그 다대다 관계 갱신
+        // 본래 있던 ScrapTag 삭제
+        List<ScrapTag> originalScrapTags = scrapTagRepository.findAllByScrap(savedScrap);
+        for(ScrapTag scrapTag : originalScrapTags) scrapTagRepository.delete(scrapTag);
+
+        // 수정 데이터로 들어온 태그들을 추가
         for (TagWriteRequestDto tagDto : requestDto.getTags()) {
             // 존재하지 않는 태그일 경우 새로 태그를 DB에 추가
             String tagName = tagDto.getTagName();

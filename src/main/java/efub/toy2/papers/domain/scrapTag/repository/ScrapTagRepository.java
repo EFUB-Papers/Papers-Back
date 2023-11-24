@@ -5,9 +5,11 @@ import efub.toy2.papers.domain.scrapTag.domain.ScrapTag;
 import efub.toy2.papers.domain.tag.domain.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ScrapTagRepository extends JpaRepository<ScrapTag, Long> {
     Optional<ScrapTag> findByTag (Tag tag);
     Optional<ScrapTag> findByScrap (Scrap scrap);
+    List<ScrapTag> findAllByScrap (Scrap scrap);
 }
