@@ -3,6 +3,7 @@ package efub.toy2.papers.domain.scrap.dto.response;
 import efub.toy2.papers.domain.comment.dto.CommentResponseDto;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.scrapTag.domain.ScrapTag;
+import efub.toy2.papers.domain.tag.dto.response.TagResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 public class ScrapResponseDto {
     private Long scrapId;
-    private String thumbnailUrl;
+    private String imgUrl;
     private String scrapTitle;
     private String scrapContent;
     private String link;
@@ -22,15 +23,16 @@ public class ScrapResponseDto {
     private String folderName;  // 폴더명
     private String categoryName;    // 카테고리명
     private Boolean liked;  // 로그인된 유저가 좋아요를 눌렀는지 여부
-    private int likeCount;  // 해당 스크랩의 좋아요 개수
+    private int heartCount;  // 해당 스크랩의 좋아요 개수
+    private int commentCount;
     private List<CommentResponseDto> comments;
-    private List<String> tags;
+    private List<TagResponseDto> tags;
     private LocalDateTime createdAt;
 
     @Builder
     public ScrapResponseDto (Scrap scrap, Boolean liked, int likeCount, List<CommentResponseDto> comments) {
         this.scrapId = scrap.getScrapId();
-        this.thumbnailUrl = scrap.getThumbnailUrl();
+        this.imgUrl = scrap.getThumbnailUrl();
         this.scrapTitle = scrap.getTitle();
         this.scrapContent = scrap.getScrapContent();
         this.link = scrap.getLink();
@@ -39,11 +41,14 @@ public class ScrapResponseDto {
         this.folderName = scrap.getFolder().getFolderName();
         this.categoryName = scrap.getCategory().getCategoryName();
         this.liked = liked;
-        this.likeCount = likeCount;
+        this.heartCount = likeCount;
+        this.commentCount = comments.size();
         this.comments = comments;
         this.tags = new ArrayList<>();
         for(ScrapTag tag : scrap.getTags()) {
-            tags.add(tag.getTag().getTagName());
+            TagResponseDto tagDto = new TagResponseDto();
+            tagDto.setTagName(tag.getTag().getTagName());
+            tags.add(tagDto);
         }
         this.createdAt = scrap.getCreatedAt();
     }

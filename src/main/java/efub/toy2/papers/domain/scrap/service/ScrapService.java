@@ -63,7 +63,12 @@ public class ScrapService {
     // 새 스크랩 저장
     public Scrap addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) {
         // 새 스크랩 생성 및 저장
-        List<String> imgPaths = s3Service.uploadThumbnail(thumbnail);
+        List<String> imgPaths = new ArrayList<>();
+        if(thumbnail.isEmpty()){    // 썸네일이 없을 경우
+            imgPaths.add(null);
+        } else {    // 썸네일이 존재할 경우
+            imgPaths = s3Service.uploadThumbnail(thumbnail);
+        }
         Member writer = memberRepository.findByNickname(member.getNickname()).get();
         Folder folder = folderRepository.findById(requestDto.getFolderId()).get();
         Category category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
@@ -101,7 +106,12 @@ public class ScrapService {
             throw new CustomException(ErrorCode.INVALID_MEMBER);
 
         // 태그를 제외한 데이터 수정
-        List<String> imgPaths = s3Service.uploadThumbnail(thumbnail);
+        List<String> imgPaths = new ArrayList<>();
+        if(thumbnail.isEmpty()){    // 썸네일이 없을 경우
+            imgPaths.add(null);
+        } else {    // 썸네일이 존재할 경우
+            imgPaths = s3Service.uploadThumbnail(thumbnail);
+        }
         Folder folder = folderRepository.findById(requestDto.getFolderId()).get();
         Category category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
         Scrap savedScrap = scrapRepository.findById(scrapId).get();
@@ -260,9 +270,13 @@ public class ScrapService {
         // Dto로 변환하여 리턴
         List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
         for(Scrap s : result) {
+            int heartCount = scrapLikeRepository.findAllByScrap(s).size();
+            int commentCount = commentRepository.findAllByScrap(s).size();
             dtos.add(
                     ScrapSimpleResponseDto.builder()
                             .scrap(s)
+                            .heartCount(heartCount)
+                            .commentCount(commentCount)
                             .build()
             );
         }
