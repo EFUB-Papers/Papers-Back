@@ -53,12 +53,6 @@ public class MemberController {
         return memberService.isNicknameExist(member,requestDto.getNickname());
     }
 
-    /* 멤버 조회 */
-    @PostMapping("/members/search")
-    public MemberInfoDto memberFindByNickname(@RequestBody NicknameRequestDto requestDto){
-        return new MemberInfoDto(memberService.findMemberByNickname(requestDto.getNickname()));
-    }
-
     /* 프로필 설정 */
     @PostMapping ("/members/profile")
     public MemberInfoDto setProfile(@AuthUser Member member,
@@ -66,6 +60,12 @@ public class MemberController {
                                        @RequestPart(value="profileImg") List<MultipartFile> images) throws IOException{
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return memberService.setProfile(member,requestDto,images);
+    }
+
+    /* 멤버 조회 */
+    @GetMapping("/members/search/{nickname}")
+    public MemberInfoDto memberFindByNickname(@PathVariable String nickname){
+        return new MemberInfoDto(memberService.findMemberByNickname(nickname));
     }
 
     /* 회원 별 폴더 조회 */
