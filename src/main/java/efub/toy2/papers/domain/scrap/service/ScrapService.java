@@ -103,6 +103,8 @@ public class ScrapService {
         if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
             throw new CustomException(ErrorCode.INVALID_MEMBER);
 
+        if(thumbnail == null) updateScrap(requestDto, scrapId);
+
         // 태그를 제외한 데이터 수정
         List<String> imgPaths = new ArrayList<>();
         if (thumbnail.isEmpty()){    // thumbnail이 전달되었는데 비어있는 경우 썸네일 삭제
@@ -145,11 +147,7 @@ public class ScrapService {
     }
 
     // 스크랩 수정 (썸네일 변경 없음)
-    public void updateScrap(Member member, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
-        // 해당 스크랩의 작성자 본인인지 확인
-        if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
-            throw new CustomException(ErrorCode.INVALID_MEMBER);
-
+    public void updateScrap(ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
         Folder folder;
         if(requestDto.getFolderId() != null) folder = folderRepository.findById(requestDto.getFolderId()).get();
         else folder = scrapRepository.findById(scrapId).get().getFolder();
