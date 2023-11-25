@@ -108,6 +108,8 @@ public class ScrapService {
         // 태그를 제외한 데이터 수정
         List<String> imgPaths = new ArrayList<>();
         if (thumbnail.isEmpty()){    // thumbnail이 전달되었는데 비어있는 경우 썸네일 삭제
+            String originalImageUrl = scrapRepository.findById(scrapId).get().getThumbnailUrl();
+            s3Service.deleteImage(originalImageUrl);
             imgPaths.add(null);
         } else {    // 썸네일이 존재할 경우
             imgPaths = s3Service.uploadThumbnail(thumbnail);
