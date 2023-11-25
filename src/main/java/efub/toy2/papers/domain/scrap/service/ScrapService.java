@@ -251,7 +251,7 @@ public class ScrapService {
 
 
     // 페이징 함수 (limit= 한 페이지당 스크랩 수)
-    public ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
+    private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
         int size = scraps.size();
 
         // 총 페이지 개수 계산

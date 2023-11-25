@@ -1,5 +1,6 @@
 package efub.toy2.papers.domain.folder.service;
 
+import efub.toy2.papers.domain.comment.repository.CommentRepository;
 import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.domain.folder.dto.FolderRequestDto;
 import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
@@ -7,8 +8,10 @@ import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapSimpleResponseDto;
 import efub.toy2.papers.domain.scrap.repository.ScrapRepository;
 import efub.toy2.papers.domain.scrap.service.ScrapService;
+import efub.toy2.papers.domain.scrapLike.repository.ScrapLikeRepository;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,8 @@ public class FolderService {
     public final FolderRepository folderRepository;
     private final ScrapRepository scrapRepository;
     private final ScrapService scrapService;
+    private final ScrapLikeRepository scrapLikeRepository;
+    private final CommentRepository commentRepository;
 
     /* 기본 폴더 생성 */
     public Folder createDefaultFolder(Member member) {
@@ -70,7 +75,7 @@ public class FolderService {
     public ScrapListResponseDto findScrapListByFolderId(Member member, Long folderId, Long page) {
         Folder folder = findFolderByFolderId(folderId);
         List<Scrap> scrapList = scrapRepository.findAllByFolderOrderByCreatedAtDesc(folder);
-        return scrapService.paging(scrapList, page, 10);
+        return paging(scrapList, page, 10);
     }
 
     /* 폴더의 이름 변경 */
@@ -94,5 +99,41 @@ public class FolderService {
     /* 회원 별 폴더 목록 검색 */
     public List<Folder> findFolderListByOwner(Member member){
         return folderRepository.findAllByFolderOwner(member);
+    }
+
+    // 페이징 함수 (limit= 한 페이지당 스크랩 수)
+    private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
+        int size = scraps.size();
+
+        // 총 페이지 개수 계산
+        Long lastPage = size/10L;
+        if(size%limit != 0) lastPage++;
+
+        // 전달받은 페이지에 맞게 리스트 생성
+        int start = (int)((page-1)*limit);
+        List<Scrap> result = new ArrayList<>();
+        if(page == lastPage)
+            for(int i=start; i<size; i++) result.add(scraps.get(i));
+        else
+            for(int i= start; i<start+limit; i++) result.add(scraps.get(i));
+
+        // Dto로 변환하여 리턴
+        List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
+        for(Scrap s : result) {
+            int heartCount = scrapLikeRepository.findAllByScrap(s).size();
+            int commentCount = commentRepository.findAllByScrap(s).size();
+            dtos.add(
+                    ScrapSimpleResponseDto.builder()
+                            .scrap(s)
+                            .heartCount(heartCount)
+                            .commentCount(commentCount)
+                            .build()
+            );
+        }
+        return ScrapListResponseDto.builder()
+                .thisPage(page)
+                .lastPage(lastPage)
+                .scraps(dtos)
+                .build();
     }
 }
