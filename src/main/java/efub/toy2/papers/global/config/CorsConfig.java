@@ -19,7 +19,7 @@ public class CorsConfig {
 
         config.addAllowedOrigin("http://localhost:3000/");
 
-
+        config.addAllowedHeader("*");
         config.addAllowedHeader(CorsConfiguration.ALL);
         config.addAllowedMethod(HttpMethod.GET);
         config.addAllowedMethod(HttpMethod.POST);
@@ -28,8 +28,6 @@ public class CorsConfig {
         config.addAllowedMethod(HttpMethod.DELETE);
         config.addAllowedMethod(HttpMethod.TRACE);
         config.addAllowedMethod(HttpMethod.OPTIONS);
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
 
 
 
