@@ -12,7 +12,7 @@ import efub.toy2.papers.domain.member.dto.response.MemberSearchResponseDto;
 import efub.toy2.papers.domain.member.dto.response.ReissueResponseDto;
 import efub.toy2.papers.domain.member.service.AuthService;
 import efub.toy2.papers.domain.member.service.MemberService;
-import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapSimpleResponseDto;
 import efub.toy2.papers.global.config.AuthUser;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -85,7 +85,7 @@ public class MemberController {
 
     // 회원별 스크랩 조회
     @GetMapping("/members/{memberId}/scraps")
-    public ScrapListResponseDto getMembersScraps(@PathVariable Long memberId, @RequestParam(value = "page") Long page) {
+    public List<ScrapSimpleResponseDto> getMembersScraps(@PathVariable Long memberId, @RequestParam(value = "page") Long page) {
         return memberService.getMembersScraps(memberId, page);
     }
 

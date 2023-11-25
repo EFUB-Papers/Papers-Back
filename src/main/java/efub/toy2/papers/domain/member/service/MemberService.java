@@ -3,19 +3,14 @@ package efub.toy2.papers.domain.member.service;
 import efub.toy2.papers.domain.comment.repository.CommentRepository;
 import efub.toy2.papers.domain.folder.domain.Folder;
 import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
-import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.folder.service.FolderService;
-import efub.toy2.papers.domain.follow.domain.Follow;
-import efub.toy2.papers.domain.follow.service.FollowService;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.domain.Role;
 import efub.toy2.papers.domain.member.dto.ProfileRequestDto;
 import efub.toy2.papers.domain.member.dto.response.MemberInfoDto;
-import efub.toy2.papers.domain.member.dto.response.MemberSearchResponseDto;
 import efub.toy2.papers.domain.member.oauth.GoogleUser;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
-import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
 import efub.toy2.papers.domain.scrap.dto.response.ScrapSimpleResponseDto;
 import efub.toy2.papers.domain.scrap.repository.ScrapRepository;
 import efub.toy2.papers.domain.scrapLike.repository.ScrapLikeRepository;
@@ -117,10 +112,22 @@ public class MemberService {
     }
 
     // 멤버별 스크랩 목록 조회
-    public ScrapListResponseDto getMembersScraps(Long memberId, Long page) {
+    public List<ScrapSimpleResponseDto> getMembersScraps(Long memberId, Long page) {
         Member writer = memberRepository.findById(memberId).get();
         List<Scrap> scraps = scrapRepository.findAllByScrapWriter(writer);
-        return paging(scraps, page, 10);
+        List<ScrapSimpleResponseDto> result = new ArrayList<>();
+        for(Scrap s : scraps) {
+            int heartCount = scrapLikeRepository.findAllByScrap(s).size();
+            int commentCount = commentRepository.findAllByScrap(s).size();
+            result.add(
+                    ScrapSimpleResponseDto.builder()
+                            .scrap(s)
+                            .heartCount(heartCount)
+                            .commentCount(commentCount)
+                            .build()
+            );
+        }
+        return result;
     }
 
     /* 로그인한 유저인지 검사 */
@@ -133,56 +140,6 @@ public class MemberService {
         return member.getProfileImgUrl();
     }
 
-    // 페이징 함수 (limit= 한 페이지당 스크랩 수)
-    private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
-        // 스크랩 리스트가 비어있을 경우를 처리
-        if(scraps.isEmpty()) {
-            return ScrapListResponseDto.builder()
-                    .scraps(null)
-                    .thisPage(page)
-                    .lastPage(1L)
-                    .build();
-
-        }
-
-        int size = scraps.size();
-
-        // 총 페이지 개수 계산
-        Long lastPage = size/10L;
-        if(size%limit != 0) lastPage++;
-
-        // 전달받은 페이지에 맞게 리스트 생성
-        int start = (int)((page-1)*limit);
-        List<Scrap> result = new ArrayList<>();
-        try{
-            if(page == lastPage)
-                for(int i=start; i<size; i++) result.add(scraps.get(i));
-            else
-                for(int i= start; i<start+limit; i++) result.add(scraps.get(i));
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("########## size: " + size + ", thisPage: " + page + "lastPage: " + lastPage);
-        }
-
-        // Dto로 변환하여 리턴
-        List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
-        for(Scrap s : result) {
-            int heartCount = scrapLikeRepository.findAllByScrap(s).size();
-            int commentCount = commentRepository.findAllByScrap(s).size();
-            dtos.add(
-                    ScrapSimpleResponseDto.builder()
-                            .scrap(s)
-                            .heartCount(heartCount)
-                            .commentCount(commentCount)
-                            .build()
-            );
-        }
-        return ScrapListResponseDto.builder()
-                .thisPage(page)
-                .lastPage(lastPage)
-                .scraps(dtos)
-                .build();
-    }
 
 
     /* 랜덤 회원 목록 조회 : 일단 멤버 리스트 앞에서 3개 자르기

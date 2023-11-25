@@ -6,7 +6,7 @@ import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.service.MemberService;
-import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapSimpleResponseDto;
 import efub.toy2.papers.global.config.AuthUser;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -40,7 +40,7 @@ public class FolderController {
 
     // 폴더별 스크랩 목록 조회
     @GetMapping("/{folderId}/scraps")
-    public ScrapListResponseDto getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId, @RequestParam(value = "page") Long page){
+    public List<ScrapSimpleResponseDto> getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId, @RequestParam(value = "page") Long page){
         return folderService.findScrapListByFolderId(member,folderId, page);
     }
 

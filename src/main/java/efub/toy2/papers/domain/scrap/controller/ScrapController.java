@@ -2,12 +2,11 @@ package efub.toy2.papers.domain.scrap.controller;
 
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.service.MemberService;
-import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.scrap.dto.request.ScrapSearchRequestDto;
 import efub.toy2.papers.domain.scrap.dto.request.ScrapUpdateRequestDto;
-import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
 import efub.toy2.papers.domain.scrap.dto.response.ScrapResponseDto;
 import efub.toy2.papers.domain.scrap.dto.request.ScrapWriteRequestDto;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapSimpleResponseDto;
 import efub.toy2.papers.domain.scrap.service.ScrapService;
 import efub.toy2.papers.global.config.AuthUser;
 import efub.toy2.papers.global.exception.CustomException;
@@ -72,26 +71,26 @@ public class ScrapController {
 
     // 추천 스크랩 목록 조회
     @GetMapping("/recommend")
-    public ScrapListResponseDto getRecommendScrap (@RequestParam(value = "page") Long page) {
+    public List<ScrapSimpleResponseDto> getRecommendScrap (@RequestParam(value = "page") Long page) {
         return scrapService.getRecommendScrap(page);
     }
 
 
     // 스크랩 검색
     @PostMapping("/search")
-    public ScrapListResponseDto searchScraps (@RequestParam(value = "searchby") String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
+    public List<ScrapSimpleResponseDto> searchScraps (@RequestParam(value = "searchby") String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
         return scrapService.searchScraps(searchby, category, page, requestDto);
     }
 
     // 카테고리별 스크랩 목록 조회
     @GetMapping("/category")
-    public ScrapListResponseDto getScrapsFromCategory (@RequestParam(value = "category") String category, @RequestParam(value = "page") Long page) {
+    public List<ScrapSimpleResponseDto> getScrapsFromCategory (@RequestParam(value = "category") String category, @RequestParam(value = "page") Long page) {
         return scrapService.getScrapsFromCategory(category, page);
     }
 
     // 로그인한 멤버가 좋아요를 누른 스크랩 목록 조회
     @GetMapping("/liked")
-    public ScrapListResponseDto getLikedScraps (@AuthUser Member member, @RequestParam(value = "page") Long page) {
+    public List<ScrapSimpleResponseDto> getLikedScraps (@AuthUser Member member, @RequestParam(value = "page") Long page) {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return scrapService.getLikedScraps(member, page);
