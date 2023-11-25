@@ -187,7 +187,8 @@ public class ScrapService {
         // 모든 스크랩 리스트를 시간순으로 받아오기
         List<Scrap> scraps= scrapRepository.findAllByOrderByCreatedAtDesc();
         List<ScrapSimpleResponseDto> result = new ArrayList<>();
-        for(Scrap s : scraps) {
+        for(int i=0; i<9; i++) {
+            Scrap s = scraps.get(i);
             int heartCount = scrapLikeRepository.findAllByScrap(s).size();
             int commentCount = commentRepository.findAllByScrap(s).size();
             result.add(
