@@ -109,7 +109,7 @@ public class FollowService {
             Boolean isFollower = isAlreadyFollowed(member,randomMember);
             searchResponseDtoList.add(new MemberSearchResponseDto(randomMember , isFollower));
         }
-        if(searchResponseDtoList.size() > 3) return searchResponseDtoList.subList(0,2);
+        if(searchResponseDtoList.size() > 3) return searchResponseDtoList.subList(0,3);
         else return searchResponseDtoList;
     }
 }
