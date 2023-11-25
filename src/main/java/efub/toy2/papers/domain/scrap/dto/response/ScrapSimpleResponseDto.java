@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ScrapSimpleResponseDto {
     private Long scrapId;
+    private Long folderId;
     private String scrapLink;
     private String scrapTitle;
     private String writerNickname;
@@ -22,6 +23,7 @@ public class ScrapSimpleResponseDto {
     @Builder
     public ScrapSimpleResponseDto (Scrap scrap, int heartCount, int commentCount) {
         this.scrapId = scrap.getScrapId();
+        this.folderId = scrap.getFolder().getFolderId();
         this.scrapLink = scrap.getLink();
         this.scrapTitle = scrap.getTitle();
         this.writerNickname = scrap.getScrapWriter().getNickname();
