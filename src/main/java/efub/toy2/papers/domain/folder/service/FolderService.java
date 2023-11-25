@@ -30,7 +30,6 @@ public class FolderService {
 
     public final FolderRepository folderRepository;
     private final ScrapRepository scrapRepository;
-    private final ScrapService scrapService;
     private final ScrapLikeRepository scrapLikeRepository;
     private final CommentRepository commentRepository;
 
