@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 public class ScrapWriteRequestDto {
-    private String writerNickname;
     private String scrapTitle;
     private String scrapLink;
     private String scrapContent;
