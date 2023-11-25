@@ -214,6 +214,7 @@ public class ScrapService {
             result.addAll(titleResult);
             result.addAll(contentResult);
         } else {
+            System.out.println("요청받은 검색기준:" + searchby);
             throw new CustomException(ErrorCode.INVALID_SEARCHBY);
         }
 
