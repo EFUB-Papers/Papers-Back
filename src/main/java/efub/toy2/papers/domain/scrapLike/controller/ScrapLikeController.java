@@ -1,7 +1,6 @@
 package efub.toy2.papers.domain.scrapLike.controller;
 
 import efub.toy2.papers.domain.member.domain.Member;
-import efub.toy2.papers.domain.scrapLike.repository.ScrapLikeRepository;
 import efub.toy2.papers.domain.scrapLike.service.ScrapLikeService;
 import efub.toy2.papers.global.config.AuthUser;
 import lombok.RequiredArgsConstructor;
