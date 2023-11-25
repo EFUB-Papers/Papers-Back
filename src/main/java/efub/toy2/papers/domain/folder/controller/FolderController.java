@@ -6,6 +6,7 @@ import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.service.FolderService;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.service.MemberService;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
 import efub.toy2.papers.global.config.AuthUser;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
@@ -39,8 +40,8 @@ public class FolderController {
 
     /* 폴더의 스크랩 목록 조회 -> 이건 이후에 스크랩 기능 완료된 후 작성 가능. */
     @GetMapping("/{folderId}/scraps")
-    public List<FolderResponseDto> getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId){
-        return folderService.findScrapListByFolderId(member,folderId);
+    public ScrapListResponseDto getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId, @RequestParam(value = "page") Long page){
+        return folderService.findScrapListByFolderId(member,folderId, page);
     }
 
     /* 폴더 이름 변경 */

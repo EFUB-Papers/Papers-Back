@@ -6,7 +6,9 @@ import efub.toy2.papers.domain.folder.dto.FolderResponseDto;
 import efub.toy2.papers.domain.folder.repository.FolderRepository;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
+import efub.toy2.papers.domain.scrap.dto.response.ScrapListResponseDto;
 import efub.toy2.papers.domain.scrap.repository.ScrapRepository;
+import efub.toy2.papers.domain.scrap.service.ScrapService;
 import efub.toy2.papers.global.exception.CustomException;
 import efub.toy2.papers.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class FolderService {
 
     public final FolderRepository folderRepository;
     private final ScrapRepository scrapRepository;
+    private final ScrapService scrapService;
 
     /* 기본 폴더 생성 */
     public Folder createDefaultFolder(Member member) {
@@ -64,14 +67,10 @@ public class FolderService {
     }
 
     /* 폴더의 스크랩 목록 조회 */
-    public List<FolderResponseDto> findScrapListByFolderId(Member member, Long folderId) {
+    public ScrapListResponseDto findScrapListByFolderId(Member member, Long folderId, Long page) {
         Folder folder = findFolderByFolderId(folderId);
         List<Scrap> scrapList = scrapRepository.findAllByFolderOrderByCreatedAtDesc(folder);
-        List<FolderResponseDto> responseDtoList = new ArrayList<>();
-        for(Scrap scrap : scrapList){
-            responseDtoList.add(new FolderResponseDto(folder));
-        }
-        return responseDtoList;
+        return scrapService.paging(scrapList, page, 10);
     }
 
     /* 폴더의 이름 변경 */
