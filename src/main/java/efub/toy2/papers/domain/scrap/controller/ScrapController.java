@@ -79,7 +79,7 @@ public class ScrapController {
 
     // 스크랩 검색
     @PostMapping("/search")
-    public ScrapListResponseDto searchScraps (@PathVariable String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
+    public ScrapListResponseDto searchScraps (@RequestParam(value = "searchby") String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
         return scrapService.searchScraps(searchby, category, page, requestDto);
     }
 
