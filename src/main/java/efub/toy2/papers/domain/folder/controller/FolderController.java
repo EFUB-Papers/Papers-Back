@@ -38,7 +38,7 @@ public class FolderController {
         return folderService.deleteFolder(member,folderId);
     }
 
-    /* 폴더의 스크랩 목록 조회 -> 이건 이후에 스크랩 기능 완료된 후 작성 가능. */
+    // 폴더별 스크랩 목록 조회
     @GetMapping("/{folderId}/scraps")
     public ScrapListResponseDto getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId, @RequestParam(value = "page") Long page){
         return folderService.findScrapListByFolderId(member,folderId, page);

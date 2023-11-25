@@ -111,10 +111,15 @@ public class FolderService {
         // 전달받은 페이지에 맞게 리스트 생성
         int start = (int)((page-1)*limit);
         List<Scrap> result = new ArrayList<>();
-        if(page == lastPage)
-            for(int i=start; i<size; i++) result.add(scraps.get(i));
-        else
-            for(int i= start; i<start+limit; i++) result.add(scraps.get(i));
+        try{
+            if(page == lastPage)
+                for(int i=start; i<size; i++) result.add(scraps.get(i));
+            else
+                for(int i= start; i<start+limit; i++) result.add(scraps.get(i));
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("########## size: " + size + ", thisPage: " + page + "lastPage: " + lastPage);
+        }
 
         // Dto로 변환하여 리턴
         List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
