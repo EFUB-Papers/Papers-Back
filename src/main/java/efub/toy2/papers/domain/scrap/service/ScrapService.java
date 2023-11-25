@@ -183,7 +183,7 @@ public class ScrapService {
     }
 
     // 추천 스크랩 리스트 조회 (최신 스크랩 목록)
-    public List<ScrapSimpleResponseDto> getRecommendScrap(Long page) {
+    public List<ScrapSimpleResponseDto> getRecommendScrap() {
         // 모든 스크랩 리스트를 시간순으로 받아오기
         List<Scrap> scraps= scrapRepository.findAllByOrderByCreatedAtDesc();
         List<ScrapSimpleResponseDto> result = new ArrayList<>();
@@ -202,7 +202,7 @@ public class ScrapService {
     }
 
     // 스크랩 검색
-    public List<ScrapSimpleResponseDto> searchScraps(String searchby, String category, Long page, ScrapSearchRequestDto requestDto) {
+    public List<ScrapSimpleResponseDto> searchScraps(String searchby, String category, ScrapSearchRequestDto requestDto) {
         String query = requestDto.getQuery();
         // searchby: 태그(tag), 제목+내용(titleContent)
         // category: 시사(news), 문화(culture), 여행(tour), IT(it), 라이프(life), 지식(knowledge), 기타(etc)
@@ -267,7 +267,7 @@ public class ScrapService {
     }
 
     // 카테고리별 스크랩 목록 조회
-    public List<ScrapSimpleResponseDto> getScrapsFromCategory(String category, Long page) {
+    public List<ScrapSimpleResponseDto> getScrapsFromCategory(String category) {
         Category foundCategory = categoryRepository.findByCategoryName(category).get();
         List<Scrap> scraps= scrapRepository.findAllByCategory(foundCategory);
 

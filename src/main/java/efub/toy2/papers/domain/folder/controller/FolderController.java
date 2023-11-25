@@ -40,8 +40,8 @@ public class FolderController {
 
     // 폴더별 스크랩 목록 조회
     @GetMapping("/{folderId}/scraps")
-    public List<ScrapSimpleResponseDto> getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId, @RequestParam(value = "page") Long page){
-        return folderService.findScrapListByFolderId(member,folderId, page);
+    public List<ScrapSimpleResponseDto> getFolderScrapList(@AuthUser Member member , @PathVariable Long folderId){
+        return folderService.findScrapListByFolderId(member,folderId);
     }
 
     /* 폴더 이름 변경 */

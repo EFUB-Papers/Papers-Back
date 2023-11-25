@@ -71,21 +71,21 @@ public class ScrapController {
 
     // 추천 스크랩 목록 조회
     @GetMapping("/recommend")
-    public List<ScrapSimpleResponseDto> getRecommendScrap (@RequestParam(value = "page") Long page) {
-        return scrapService.getRecommendScrap(page);
+    public List<ScrapSimpleResponseDto> getRecommendScrap () {
+        return scrapService.getRecommendScrap();
     }
 
 
     // 스크랩 검색
     @PostMapping("/search")
-    public List<ScrapSimpleResponseDto> searchScraps (@RequestParam(value = "searchby") String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
-        return scrapService.searchScraps(searchby, category, page, requestDto);
+    public List<ScrapSimpleResponseDto> searchScraps (@RequestParam(value = "searchby") String searchby, @RequestParam(value = "category") String category, @RequestBody ScrapSearchRequestDto requestDto) {
+        return scrapService.searchScraps(searchby, category, requestDto);
     }
 
     // 카테고리별 스크랩 목록 조회
     @GetMapping("/category")
-    public List<ScrapSimpleResponseDto> getScrapsFromCategory (@RequestParam(value = "category") String category, @RequestParam(value = "page") Long page) {
-        return scrapService.getScrapsFromCategory(category, page);
+    public List<ScrapSimpleResponseDto> getScrapsFromCategory (@RequestParam(value = "category") String category) {
+        return scrapService.getScrapsFromCategory(category);
     }
 
     // 로그인한 멤버가 좋아요를 누른 스크랩 목록 조회

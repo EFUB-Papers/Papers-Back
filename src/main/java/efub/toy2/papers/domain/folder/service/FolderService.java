@@ -69,7 +69,7 @@ public class FolderService {
     }
 
     /* 폴더의 스크랩 목록 조회 */
-    public List<ScrapSimpleResponseDto> findScrapListByFolderId(Member member, Long folderId, Long page) {
+    public List<ScrapSimpleResponseDto> findScrapListByFolderId(Member member, Long folderId) {
         Folder folder = findFolderByFolderId(folderId);
         List<Scrap> scraps = scrapRepository.findAllByFolderOrderByCreatedAtDesc(folder);
         List<ScrapSimpleResponseDto> result = new ArrayList<>();

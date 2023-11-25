@@ -112,7 +112,7 @@ public class MemberService {
     }
 
     // 멤버별 스크랩 목록 조회
-    public List<ScrapSimpleResponseDto> getMembersScraps(Long memberId, Long page) {
+    public List<ScrapSimpleResponseDto> getMembersScraps(Long memberId) {
         Member writer = memberRepository.findById(memberId).get();
         List<Scrap> scraps = scrapRepository.findAllByScrapWriter(writer);
         List<ScrapSimpleResponseDto> result = new ArrayList<>();

@@ -85,8 +85,8 @@ public class MemberController {
 
     // 회원별 스크랩 조회
     @GetMapping("/members/{memberId}/scraps")
-    public List<ScrapSimpleResponseDto> getMembersScraps(@PathVariable Long memberId, @RequestParam(value = "page") Long page) {
-        return memberService.getMembersScraps(memberId, page);
+    public List<ScrapSimpleResponseDto> getMembersScraps(@PathVariable Long memberId) {
+        return memberService.getMembersScraps(memberId);
     }
 
 
