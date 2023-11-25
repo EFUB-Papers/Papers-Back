@@ -144,7 +144,7 @@ public class ScrapService {
         savedScrap.updateScrap(requestDto, imgPaths.get(0), folder, category);
     }
 
-    // 스크랩 수정 (썸네일을 변경 없음)
+    // 스크랩 수정 (썸네일 변경 없음)
     public void updateScrap(Member member, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
         // 해당 스크랩의 작성자 본인인지 확인
         if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
