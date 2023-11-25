@@ -252,6 +252,16 @@ public class ScrapService {
 
     // 페이징 함수 (limit= 한 페이지당 스크랩 수)
     private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
+        // 스크랩 리스트가 비어있을 경우를 처리
+        if(scraps.isEmpty()) {
+            return ScrapListResponseDto.builder()
+                    .scraps(null)
+                    .thisPage(page)
+                    .lastPage(1L)
+                    .build();
+
+        }
+
         int size = scraps.size();
 
         // 총 페이지 개수 계산
