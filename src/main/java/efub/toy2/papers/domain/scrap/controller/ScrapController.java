@@ -79,19 +79,19 @@ public class ScrapController {
 
     // 스크랩 검색
     @PostMapping("/search")
-    public ScrapListResponseDto searchScraps (@PathVariable String searchby, @PathVariable String category, @PathVariable Long page, @RequestBody ScrapSearchRequestDto requestDto) {
+    public ScrapListResponseDto searchScraps (@PathVariable String searchby, @RequestParam(value = "category") String category, @RequestParam(value = "page") Long page, @RequestBody ScrapSearchRequestDto requestDto) {
         return scrapService.searchScraps(searchby, category, page, requestDto);
     }
 
     // 카테고리별 스크랩 목록 조회
     @GetMapping("/category")
-    public ScrapListResponseDto getScrapsFromCategory (@PathVariable String category, @PathVariable Long page) {
+    public ScrapListResponseDto getScrapsFromCategory (@RequestParam(value = "category") String category, @RequestParam(value = "page") Long page) {
         return scrapService.getScrapsFromCategory(category, page);
     }
 
     // 로그인한 멤버가 좋아요를 누른 스크랩 목록 조회
     @GetMapping("/liked")
-    public ScrapListResponseDto getLikedScraps (@AuthUser Member member, @PathVariable Long page) {
+    public ScrapListResponseDto getLikedScraps (@AuthUser Member member, @RequestParam(value = "page") Long page) {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         return scrapService.getLikedScraps(member, page);
