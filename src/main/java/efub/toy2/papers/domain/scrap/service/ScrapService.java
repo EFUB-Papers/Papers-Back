@@ -223,6 +223,21 @@ public class ScrapService {
             List<Scrap> contentResult = scrapRepository.findScrapsByScrapContentContaining(query);
             result.addAll(titleResult);
             result.addAll(contentResult);
+        } else if (searchby.equals("all")) {
+            // DB에서 쿼리 문자열을 포함하는 태그 리스트 가져오기
+            List<Tag> foundTags = tagRepository.findByTagNameContaining(query);
+            // ScrapTag를 참조하여 해당 태그들이 붙은 스크랩 리스트 가져오기
+            List<ScrapTag> foundScrapTags = new ArrayList<>();
+            for(Tag t : foundTags)
+                foundScrapTags.add(scrapTagRepository.findByTag(t).get());
+            for(ScrapTag st : foundScrapTags)
+                result.add(scrapRepository.findById(st.getScrap().getScrapId()).get());
+
+            // 내용과 제목에 검색어가 포함된 스크랩 목록 가져오기
+            List<Scrap> titleResult = scrapRepository.findScrapsByTitleContaining(query);
+            List<Scrap> contentResult = scrapRepository.findScrapsByScrapContentContaining(query);
+            result.addAll(titleResult);
+            result.addAll(contentResult);
         } else {
             System.out.println("요청받은 검색기준:" + searchby);
             throw new CustomException(ErrorCode.INVALID_SEARCHBY);
