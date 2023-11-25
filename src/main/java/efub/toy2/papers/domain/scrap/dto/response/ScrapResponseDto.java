@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 public class ScrapResponseDto {
     private Long scrapId;
+    private Long folderId;
     private String imgUrl;
     private String scrapTitle;
     private String scrapContent;
@@ -32,6 +33,7 @@ public class ScrapResponseDto {
     @Builder
     public ScrapResponseDto (Scrap scrap, Boolean liked, int likeCount, List<CommentResponseDto> comments) {
         this.scrapId = scrap.getScrapId();
+        this.folderId = scrap.getFolder().getFolderId();
         this.imgUrl = scrap.getThumbnailUrl();
         this.scrapTitle = scrap.getTitle();
         this.scrapContent = scrap.getScrapContent();
