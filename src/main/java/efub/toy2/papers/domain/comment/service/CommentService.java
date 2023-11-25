@@ -7,6 +7,8 @@ import efub.toy2.papers.domain.comment.repository.CommentRepository;
 import efub.toy2.papers.domain.member.domain.Member;
 import efub.toy2.papers.domain.member.repository.MemberRepository;
 import efub.toy2.papers.domain.member.service.MemberService;
+import efub.toy2.papers.domain.reply.repository.ReplyRepository;
+import efub.toy2.papers.domain.reply.service.ReplyService;
 import efub.toy2.papers.domain.scrap.domain.Scrap;
 import efub.toy2.papers.domain.scrap.repository.ScrapRepository;
 import efub.toy2.papers.global.exception.CustomException;
@@ -29,6 +31,8 @@ public class CommentService {
     private final ScrapRepository scrapRepository;
     private final CommentRepository commentRepository;
     private final MemberService memberService;
+    private final ReplyRepository replyRepository;
+
 
     /* 댓글 생성 */
     public CommentResponseDto createComment(Member member, CommentRequestDto requestDto) {
@@ -43,7 +47,8 @@ public class CommentService {
 
         Boolean isMine = commentIsMine(member,comment);
         String profileImgUrl = memberService.getProfileImg(member);
-        return new CommentResponseDto(comment,isMine, profileImgUrl);
+        Long replyCount = countReplyByComment(comment);
+        return new CommentResponseDto(comment,isMine, profileImgUrl ,replyCount);
     }
 
     /* 댓글 삭제 */
@@ -62,7 +67,8 @@ public class CommentService {
         for(Comment comment : commentList){
             Boolean isMine = commentIsMine(member,comment);
             String profileImgUrl = memberService.getProfileImg(comment.getCommentWriter());
-            commentResponseDtoList.add(new CommentResponseDto(comment , isMine ,profileImgUrl));
+            Long replyCount = countReplyByComment(comment);
+            commentResponseDtoList.add(new CommentResponseDto(comment , isMine ,profileImgUrl , replyCount));
         }
         return commentResponseDtoList;
     }
@@ -86,5 +92,10 @@ public class CommentService {
         Scrap scrap = scrapRepository.findById(scrapId)
                 .orElseThrow(()->new CustomException(ErrorCode.NO_SCRAP_EXIST));
         return scrap;
+    }
+
+    /* 댓글롤 대댓글 수 조회 */
+    public Long countReplyByComment(Comment comment){
+        return replyRepository.countByComment(comment);
     }
 }
