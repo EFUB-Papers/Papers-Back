@@ -15,9 +15,10 @@ public class CommentResponseDto {
     public String writerProfileImgUrl;
     public LocalDateTime createdAt;
     public Boolean commentIsMine;
+    public Long replyCount;
 
     @Builder
-    public CommentResponseDto(Comment comment , Boolean commentIsMine , String profileImgUrl){
+    public CommentResponseDto(Comment comment , Boolean commentIsMine , String profileImgUrl , Long replyCount){
         this.commentId = comment.getCommentId();
         this.scrapId = comment.getScrap().getScrapId();
         this.commentContent = comment.getCommentContent();
