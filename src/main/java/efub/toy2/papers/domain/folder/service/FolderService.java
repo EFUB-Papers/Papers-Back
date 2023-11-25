@@ -54,7 +54,7 @@ public class FolderService {
     public String deleteFolder(Member member, Long folderId) {
         Folder folder = findFolderByFolderId(folderId);
         if(!isFolderOwner(member,folder)) throw new CustomException(ErrorCode.INVALID_MEMBER);
-        if(folder.getFolderName().equals("default_folder")) throw new CustomException(ErrorCode.DEFAUT_FOLDER_CANNOT_DELETE);
+        if(folder.getFolderName().equals("default_folder")) throw new CustomException(ErrorCode.DEFAULT_FOLDER_CANNOT_DELETE);
         folderRepository.delete(folder);
         return "폴더가 삭제되었습니다.";
     }
@@ -77,6 +77,7 @@ public class FolderService {
     public FolderResponseDto updateFolderName(Member member, Long folderId , FolderRequestDto requestDto) {
         Folder folder = findFolderByFolderId(folderId);
         if(!isFolderOwner(member,folder)) throw new CustomException(ErrorCode.INVALID_MEMBER);
+        if(folder.getFolderName().equals("default_folder")) throw new CustomException(ErrorCode.DEFAULT_FOLDER_CANNOT_CHANGE);
         folder.updateFolderName(requestDto.getFolderName());
         return new FolderResponseDto(folder);
     }
