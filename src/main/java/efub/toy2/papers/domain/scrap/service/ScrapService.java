@@ -62,7 +62,7 @@ public class ScrapService {
     private final CommentService commentService;
 
     // 새 스크랩 저장
-    public Scrap addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) throws IOException {
+    public void addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) throws IOException {
         // 새 스크랩 생성 및 저장
         List<String> imgPaths = new ArrayList<>();
         if(thumbnail.isEmpty()){    // 썸네일이 없을 경우
@@ -96,12 +96,11 @@ public class ScrapService {
             scrapTagRepository.save(new ScrapTag(foundTag, savedScrap));
         }
 
-        return savedScrap;
     }
 
 
     // 스크랩 수정
-    public Scrap updateScrap(Member member, List<MultipartFile> thumbnail, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
+    public void updateScrap(Member member, List<MultipartFile> thumbnail, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
         // 해당 스크랩의 작성자 본인인지 확인
         if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
             throw new CustomException(ErrorCode.INVALID_MEMBER);
@@ -136,7 +135,6 @@ public class ScrapService {
             // 새 ScrapTag를 DB에 저장
             scrapTagRepository.save(new ScrapTag(foundTag, savedScrap));
         }
-        return scrapRepository.findById(scrapId).get();
     }
 
 

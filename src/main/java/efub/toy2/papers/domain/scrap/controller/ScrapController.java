@@ -37,22 +37,22 @@ public class ScrapController {
 
     // 스크랩 작성
     @PostMapping
-    public ScrapResponseDto addScrap (@AuthUser Member member,
+    public String addScrap (@AuthUser Member member,
                                       @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapWriteRequestDto dto) throws IOException {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
-        Scrap scrap = scrapService.addScrap(member, thumbnail, dto);
-        return ScrapResponseDto.builder().scrap(scrap).build();
+        scrapService.addScrap(member, thumbnail, dto);
+        return "Success";
     }
 
     // 스크랩 수정
     @PatchMapping("/{scrapId}")
-    public ScrapResponseDto updateScrap (@AuthUser Member member,
+    public String updateScrap (@AuthUser Member member,
                                          @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapUpdateRequestDto dto, @PathVariable Long scrapId) throws IOException {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
-        Scrap scrap = scrapService.updateScrap(member, thumbnail, dto, scrapId);
-        return ScrapResponseDto.builder().scrap(scrap).build();
+        scrapService.updateScrap(member, thumbnail, dto, scrapId);
+        return "Success";
     }
 
     // 스크랩 조회
