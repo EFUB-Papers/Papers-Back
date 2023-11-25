@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,7 +62,7 @@ public class ScrapService {
     private final CommentService commentService;
 
     // 새 스크랩 저장
-    public Scrap addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) {
+    public Scrap addScrap(Member member, List<MultipartFile> thumbnail, ScrapWriteRequestDto requestDto) throws IOException {
         // 새 스크랩 생성 및 저장
         List<String> imgPaths = new ArrayList<>();
         if(thumbnail.isEmpty()){    // 썸네일이 없을 경우
@@ -100,7 +101,7 @@ public class ScrapService {
 
 
     // 스크랩 수정
-    public Scrap updateScrap(Member member, List<MultipartFile> thumbnail, ScrapUpdateRequestDto requestDto, Long scrapId) {
+    public Scrap updateScrap(Member member, List<MultipartFile> thumbnail, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
         // 해당 스크랩의 작성자 본인인지 확인
         if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
             throw new CustomException(ErrorCode.INVALID_MEMBER);
@@ -252,7 +253,7 @@ public class ScrapService {
 
 
     // 페이징 함수 (limit= 한 페이지당 스크랩 수)
-    private ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
+    public ScrapListResponseDto paging (List<Scrap> scraps, Long page, int limit) {
         int size = scraps.size();
 
         // 총 페이지 개수 계산

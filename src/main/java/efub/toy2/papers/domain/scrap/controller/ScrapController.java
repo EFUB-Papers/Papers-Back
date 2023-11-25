@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +38,7 @@ public class ScrapController {
     // 스크랩 작성
     @PostMapping
     public ScrapResponseDto addScrap (@AuthUser Member member,
-                                      @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapWriteRequestDto dto) {
+                                      @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapWriteRequestDto dto) throws IOException {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         Scrap scrap = scrapService.addScrap(member, thumbnail, dto);
@@ -47,7 +48,7 @@ public class ScrapController {
     // 스크랩 수정
     @PatchMapping("/{scrapId}")
     public ScrapResponseDto updateScrap (@AuthUser Member member,
-                                         @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapUpdateRequestDto dto, @PathVariable Long scrapId) {
+                                         @RequestPart(value="thumbnail") List<MultipartFile> thumbnail, @RequestPart(value="dto") ScrapUpdateRequestDto dto, @PathVariable Long scrapId) throws IOException {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
         Scrap scrap = scrapService.updateScrap(member, thumbnail, dto, scrapId);
