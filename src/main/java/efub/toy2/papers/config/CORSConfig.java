@@ -1,4 +1,5 @@
-package efub.toy2.papers.global.config;
+package efub.toy2.papers.config;
+
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +14,12 @@ public class CORSConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:3000/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setMaxAge(3600L);
-        config.addExposedHeader("Location");
         config.addExposedHeader("Authorization");
+        config.addExposedHeader("refresh-token");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
