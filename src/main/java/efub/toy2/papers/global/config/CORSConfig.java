@@ -1,4 +1,4 @@
-package efub.toy2.papers.config;
+package efub.toy2.papers.global.config;
 
 
 import org.springframework.context.annotation.Bean;
