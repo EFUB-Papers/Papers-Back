@@ -29,6 +29,7 @@ public class FollowService {
     /* 팔로우 생성 */
     public FollowResponseDto saveFollow(Member member, String nickname) {
         Member toFollow = memberService.findMemberByNickname(nickname);
+        if(member.getNickname().equals(toFollow.getNickname())) throw new CustomException(ErrorCode.INVALID_FOLLOW);
         if(isAlreadyFollowed(member,toFollow)) throw new CustomException(ErrorCode.ALREADY_FOLLOWED);
         Follow follow = Follow.builder()
                 .follower(member)

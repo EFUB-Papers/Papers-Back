@@ -37,7 +37,8 @@ public enum ErrorCode {
 
     /* follow */
     NO_FOLLOW_EXIST(HttpStatus.BAD_REQUEST , "존재하지 않는 팔로우입니다."),
-    ALREADY_FOLLOWED(HttpStatus.BAD_REQUEST,"이미 팔로우되어있는 회원입니다.")
+    ALREADY_FOLLOWED(HttpStatus.BAD_REQUEST,"이미 팔로우되어있는 회원입니다."),
+    INVALID_FOLLOW(HttpStatus.BAD_REQUEST,"본인을 팔로우할 수 없습니다.")
     ;
 
 
