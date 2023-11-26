@@ -70,11 +70,11 @@ public class FollowService {
 
     /* 이미 팔로우되어있는가 조회 */
     public Boolean isAlreadyFollowed(Member follower, Member following){
-        if(follower.getRole().equals("ADMIN")) {
-            Boolean isFollowed = followRepository.existsByFollowerAndFollowing(follower, following);
-            return isFollowed;
+        if(!memberService.isAdminMember(follower)) {
+            return false;
         }
-        else return false;
+        Boolean isFollowed = followRepository.existsByFollowerAndFollowing(follower, following);
+        return isFollowed;
     }
 
 
