@@ -24,21 +24,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .cors().disable()
-                .headers().frameOptions().disable()
-                .and().authorizeHttpRequests()
-                .antMatchers("/members/**").permitAll()
-                .antMatchers("/chat/**").permitAll()
-                .antMatchers("/chatrooms/**").permitAll()
-                .antMatchers("/scraps/**").permitAll()
 
-                .anyRequest().permitAll()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
 }
