@@ -15,13 +15,12 @@ public class FollowResponseDto {
     public String followingIntroduce;
 
     @Builder
-    public FollowResponseDto(Follow follow ,
-                             String followerProfileImg , String followingProfileImg){
+    public FollowResponseDto(Follow follow){
         this.followId = follow.getFollowId();
         this.followerNickname = follow.getFollower().getNickname();
         this.followingNickname = follow.getFollowing().getNickname();
-        this.followerProfileImg = followerProfileImg;
-        this.followingProfileImg = followingProfileImg;
+        this.followerProfileImg = follow.getFollower().getProfileImgUrl();
+        this.followingProfileImg = follow.getFollowing().getProfileImgUrl();
         this.followingIntroduce = follow.getFollowing().getIntroduce();
     }
 }
