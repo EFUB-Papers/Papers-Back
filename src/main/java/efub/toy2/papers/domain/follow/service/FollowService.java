@@ -36,8 +36,7 @@ public class FollowService {
                 .following(toFollow)
                 .build();
         followRepository.save(follow);
-        return new FollowResponseDto(follow ,
-                memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing()));
+        return new FollowResponseDto(follow);
     }
 
     /* 팔로우 삭제 */
@@ -53,8 +52,7 @@ public class FollowService {
         List<Follow> followList = findFollowListByFollower(member);
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         for(Follow follow : followList){
-            responseDtoList.add(new FollowResponseDto(follow,
-                    memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing())));
+            responseDtoList.add(new FollowResponseDto(follow));
         }
         return responseDtoList;
     }
@@ -64,8 +62,7 @@ public class FollowService {
         List<Follow> followList = findFollowListByFollowing(member);
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         for(Follow follow:followList){
-            responseDtoList.add(new FollowResponseDto(follow,
-                    memberService.getProfileImg(follow.getFollower()) , memberService.getProfileImg(follow.getFollowing())));
+            responseDtoList.add(new FollowResponseDto(follow));
         }
         return responseDtoList;
     }
