@@ -44,11 +44,9 @@ public class CommentService {
                 .scrap(scrap)
                 .build();
         commentRepository.save(comment);
-
         Boolean isMine = commentIsMine(member,comment);
-        String profileImgUrl = memberService.getProfileImg(member);
         Long replyCount = countReplyByComment(comment);
-        return new CommentResponseDto(comment,isMine, profileImgUrl ,replyCount);
+        return new CommentResponseDto(comment,isMine ,replyCount,comment.getCommentWriter().getProfileImgUrl());
     }
 
     /* 댓글 삭제 */
@@ -66,9 +64,8 @@ public class CommentService {
         List<CommentResponseDto> commentResponseDtoList =new ArrayList<>();
         for(Comment comment : commentList){
             Boolean isMine = commentIsMine(member,comment);
-            String profileImgUrl = memberService.getProfileImg(comment.getCommentWriter());
             Long replyCount = countReplyByComment(comment);
-            commentResponseDtoList.add(new CommentResponseDto(comment , isMine ,profileImgUrl , replyCount));
+            commentResponseDtoList.add(new CommentResponseDto(comment , isMine , replyCount , comment.getCommentWriter().getProfileImgUrl()));
         }
         return commentResponseDtoList;
     }
@@ -96,6 +93,8 @@ public class CommentService {
 
     /* 댓글롤 대댓글 수 조회 */
     public Long countReplyByComment(Comment comment){
-        return replyRepository.countByComment(comment);
+        Long replyCount = replyRepository.countByComment(comment);
+        if(replyCount.equals(null)) return 0L;
+        return replyCount;
     }
 }
