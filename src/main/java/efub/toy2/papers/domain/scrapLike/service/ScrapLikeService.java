@@ -21,13 +21,15 @@ public class ScrapLikeService {
 
     // 좋아요 추가
     public void addScrapLike(Member member, Long scrapId) {
+        // 좋아요를 이미 누른 상태가 아닐 때에만 좋아요 추가
         Scrap foundScrap = scrapRepository.findById(scrapId).get();
-        scrapLikeRepository.save(
+        if(!scrapLikeRepository.existsByScrapAndMember(foundScrap, member))
+            scrapLikeRepository.save(
                 ScrapLike.builder()
                         .scrap(foundScrap)
                         .member(member)
                         .build()
-        );
+            );
     }
 
     // 좋아요 삭제
