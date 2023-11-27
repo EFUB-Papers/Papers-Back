@@ -339,7 +339,7 @@ public class ScrapService {
     }
 
     // 로그인한 사용자가 좋아요를 누른 스크랩 목록 조회
-    public List<ScrapSimpleResponseDto> getLikedScraps(Member member, Long page) {
+    public List<ScrapSimpleResponseDto> getLikedScraps(Member member) {
         // ScrapLike DB에서 해당 사용자를 기준으로 데이터 가져오기
         List<ScrapLike> foundLikes = scrapLikeRepository.findAllByMember(member);
 
