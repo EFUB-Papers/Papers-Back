@@ -248,11 +248,15 @@ public class ScrapService {
         }
 
         // 카테고리 기준에 맞는 것들만 골라내기
-        Category foundCategory = categoryRepository.findByCategoryName(category).get();
         List<Scrap> scraps = new ArrayList<>();
-        for(Scrap s : result) {
-            if(s.getCategory().getCategoryId() == foundCategory.getCategoryId())
-                scraps.add(s);
+        if(!category.equals("all")){    // 카테고리 기준이 all이 아닐 경우에만 골라내기 수행
+            Category foundCategory = categoryRepository.findByCategoryName(category).get();
+            for(Scrap s : result) {
+                if(s.getCategory().getCategoryId() == foundCategory.getCategoryId())
+                    scraps.add(s);
+            }
+        } else {    // 카테고리 기준이 all일 경우 모두 넣기
+            for(Scrap s : result) scraps.add(s);
         }
 
         List<ScrapSimpleResponseDto> dtos = new ArrayList<>();
