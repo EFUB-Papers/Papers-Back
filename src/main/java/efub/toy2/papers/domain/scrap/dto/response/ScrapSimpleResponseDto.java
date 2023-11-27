@@ -29,7 +29,7 @@ public class ScrapSimpleResponseDto {
         this.writerNickname = scrap.getScrapWriter().getNickname();
         this.writerProfile = scrap.getScrapWriter().getProfileImgUrl();
         String originalContent = scrap.getScrapContent();
-        if(originalContent.length()>30) this.scrapContent = originalContent.substring(0,30);    // 내용이 30자 이상일 경우 자르기
+        if(originalContent.length()>60) this.scrapContent = originalContent.substring(0,60);    // 내용이 60자 이상일 경우 자르기
         else this.scrapContent = originalContent;
         this.heartCount = heartCount;
         this.commentCount = commentCount;
