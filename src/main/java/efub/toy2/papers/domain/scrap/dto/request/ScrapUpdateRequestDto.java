@@ -3,7 +3,7 @@ package efub.toy2.papers.domain.scrap.dto.request;
 import efub.toy2.papers.domain.tag.dto.request.TagWriteRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import reactor.util.annotation.Nullable;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
