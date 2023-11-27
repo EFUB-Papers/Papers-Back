@@ -96,24 +96,14 @@ public class ScrapService {
 
     }
 
+    // 스크랩 수정 (썸네일 변경 없음)
+    public void updateScrap(Member member, ScrapUpdateRequestDto requestDto, Long scrapId) {
+        Scrap savedScrap = scrapRepository.findById(scrapId).get();
 
-    // 스크랩 수정 (썸네일 삭제 혹은 수정 포함)
-    public void updateScrap(Member member, List<MultipartFile> thumbnail, ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
         // 해당 스크랩의 작성자 본인인지 확인
-        if(member.getMemberId() != scrapRepository.findById(scrapId).get().getScrapWriter().getMemberId())
+        if(member.getMemberId() != savedScrap.getScrapWriter().getMemberId())
             throw new CustomException(ErrorCode.INVALID_MEMBER);
 
-        if(thumbnail == null) updateScrap(requestDto, scrapId);
-
-        // 태그를 제외한 데이터 수정
-        List<String> imgPaths = new ArrayList<>();
-        if (thumbnail.isEmpty()){    // thumbnail이 전달되었는데 비어있는 경우 썸네일 삭제
-            String originalImageUrl = scrapRepository.findById(scrapId).get().getThumbnailUrl();
-            s3Service.deleteImage(originalImageUrl);
-            imgPaths.add(null);
-        } else {    // 썸네일이 존재할 경우
-            imgPaths = s3Service.uploadThumbnail(thumbnail);
-        }
         Folder folder;
         if(requestDto.getFolderId() != null) folder = folderRepository.findById(requestDto.getFolderId()).get();
         else folder = scrapRepository.findById(scrapId).get().getFolder();
@@ -121,48 +111,10 @@ public class ScrapService {
         if(requestDto.getCategory() != null) category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
         else category = scrapRepository.findById(scrapId).get().getCategory();
 
-        Scrap savedScrap = scrapRepository.findById(scrapId).get();
-
 
         // 태그 다대다 관계 갱신
-        if(requestDto.getTags() != null) {
-            // 본래 있던 ScrapTag 삭제
-            List<ScrapTag> originalScrapTags = scrapTagRepository.findAllByScrap(savedScrap);
-            for(ScrapTag scrapTag : originalScrapTags) scrapTagRepository.delete(scrapTag);
-
-            // 수정 데이터로 들어온 태그들을 추가
-            for (TagWriteRequestDto tagDto : requestDto.getTags()) {
-                // 존재하지 않는 태그일 경우 새로 태그를 DB에 추가
-                String tagName = tagDto.getTagName();
-                Tag foundTag;
-                if(!tagRepository.existsTagByTagName(tagName)) {
-                    foundTag = tagRepository.save(new Tag(tagName));
-                } else {    // 존재하는 태그일 경우 DB에서 찾아오기
-                    foundTag = tagRepository.findByTagName(tagName).get();
-                }
-                // 새 ScrapTag를 DB에 저장
-                scrapTagRepository.save(new ScrapTag(foundTag, savedScrap));
-        }
-        }
-
-        savedScrap.updateScrap(requestDto, imgPaths.get(0), folder, category);
-    }
-
-    // 스크랩 수정 (썸네일 변경 없음)
-    public void updateScrap(ScrapUpdateRequestDto requestDto, Long scrapId) throws IOException {
-        Folder folder;
-        if(requestDto.getFolderId() != null) folder = folderRepository.findById(requestDto.getFolderId()).get();
-        else folder = scrapRepository.findById(scrapId).get().getFolder();
-        Category category;
-        if(requestDto.getCategory() != null) category = categoryRepository.findByCategoryName(requestDto.getCategory()).get();
-        else category = scrapRepository.findById(scrapId).get().getCategory();
-
-        Scrap savedScrap = scrapRepository.findById(scrapId).get();
-
-
-        // 태그 다대다 관계 갱신
-        if(requestDto.getTags() != null) {
-            // 본래 있던 ScrapTag 삭제
+        if(requestDto.getTags() != null) {  // 전달된 태그 정보가 null이 아닌 경우
+            // 본래 있던 ScrapTag 모두 삭제
             List<ScrapTag> originalScrapTags = scrapTagRepository.findAllByScrap(savedScrap);
             for(ScrapTag scrapTag : originalScrapTags) scrapTagRepository.delete(scrapTag);
 

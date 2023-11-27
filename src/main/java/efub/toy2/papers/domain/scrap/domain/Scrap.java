@@ -69,17 +69,6 @@ public class Scrap extends BaseTimeEntity {
         this.tags = new ArrayList<>();
     }
 
-    // 수정 (썸네일 삭제 혹은 수정 포함)
-    public void updateScrap (ScrapUpdateRequestDto requestDto, String thumbnailUrl, Folder folder, Category category) {
-        if(requestDto.getScrapTitle() != null) this.title = requestDto.getScrapTitle();
-        if(requestDto.getScrapContent() != null) this.scrapContent = requestDto.getScrapContent();
-        if(requestDto.getScrapLink() != null) this.link = requestDto.getScrapLink();
-        this.thumbnailUrl = thumbnailUrl;
-        this.folder = folder;
-        this.category = category;
-        this.tags = new ArrayList<>();
-    }
-
     // 수정 (썸네일 변경 없음)
     public void updateScrap (ScrapUpdateRequestDto requestDto, Folder folder, Category category) {
         if(requestDto.getScrapTitle() != null) this.title = requestDto.getScrapTitle();
