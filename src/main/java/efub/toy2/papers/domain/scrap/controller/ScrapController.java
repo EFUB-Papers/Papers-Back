@@ -46,7 +46,7 @@ public class ScrapController {
     }
 
     // 스크랩 수정
-    @PatchMapping("/{scrapId}")
+    @PostMapping("/{scrapId}")
     public String updateScrap (@AuthUser Member member, @RequestBody ScrapUpdateRequestDto dto, @PathVariable Long scrapId) {
         // 로그인된 상태인지 확인
         if(!memberService.isAdminMember(member)) throw new CustomException(ErrorCode.NON_LOGIN);
